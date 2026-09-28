@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iceland 7-Day Plan</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --surface: #151e2e;
+      --surface-2: #1e293b;
+      --surface-3: #273549;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --nature: #34d399;
+      --culture: #a78bfa;
+      --food: #fb923c;
+      --relax: #f472b6;
+      --drive: #64748b;
+      --border: #2a3548;
+      --shadow: 0 4px 20px rgba(0,0,0,0.4);
+      --radius: 10px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    header {
+      background: linear-gradient(135deg, #0c4a6e, #1e3a5f 60%, #0b1220);
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      justify-content: space-between;
+    }
+    header h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
+    header p { color: var(--text-muted); font-size: 0.85rem; }
+    .header-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+    .btn {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn:hover { background: var(--accent); color: #0b1220; border-color: var(--accent); }
+    .btn.primary {
+      background: rgba(56,189,248,0.15);
+      color: var(--accent);
+      border-color: rgba(56,189,248,0.35);
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.78rem;
+    }
+    .legend-item { display: flex; align-items: center; gap: 0.35rem; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+    .legend-dot.nature { background: var(--nature); }
+    .legend-dot.culture { background: var(--culture); }
+    .legend-dot.food { background: var(--food); }
+    .legend-dot.relax { background: var(--relax); }
+    .legend-dot.drive { background: var(--drive); }
+
+    /* Unassigned strip at top */
+    .pool-top {
+      padding: 0.75rem 1rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .pool-top-inner {
+      background: var(--surface-2);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 0.65rem 0.85rem;
+    }
+    .pool-top-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .pool-top-header h2 {
+      font-size: 0.95rem;
+      font-weight: 650;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .pool-top-header .day-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .pool-cards-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      min-height: 40px;
+      padding: 0.25rem 0;
+    }
+    .pool-cards-row .memo {
+      width: 220px;
+      max-width: 100%;
+    }
+    .pool-slot-wrap {
+      min-height: 48px;
+      border-radius: 8px;
+      transition: background 0.15s, border-color 0.15s;
+      border: 1px solid transparent;
+      padding: 0.25rem;
+    }
+    .pool-slot-wrap.drag-over {
+      background: rgba(56,189,248,0.12);
+      border-color: var(--accent);
+    }
+
+    .board-wrap {
+      overflow-x: auto;
+      padding: 1rem;
+      height: calc(100vh - 260px);
+      min-height: 320px;
+    }
+    .board {
+      display: flex;
+      gap: 0.85rem;
+      min-width: max-content;
+      height: 100%;
+      align-items: flex-start;
+    }
+
+    .day-col {
+      width: 300px;
+      flex-shrink: 0;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      /* grow with content so all blocks fit */
+      height: auto;
+      max-height: none;
+    }
+    .day-col-header {
+      padding: 0.85rem 1rem;
+      background: linear-gradient(90deg, rgba(56,189,248,0.12), transparent);
+      border-bottom: 1px solid var(--border);
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+    .day-col-header-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.4rem;
+    }
+    .day-col-header h2 {
+      font-size: 1rem;
+      font-weight: 650;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex: 1;
+      min-width: 0;
+    }
+    .day-move-btns {
+      display: flex;
+      gap: 0.2rem;
+      flex-shrink: 0;
+    }
+    .day-move-btn {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .day-move-btn:hover:not(:disabled) {
+      background: var(--accent);
+      color: #0b1220;
+      border-color: var(--accent);
+    }
+    .day-move-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+    .day-num {
+      background: var(--accent);
+      color: #0b1220;
+      width: 1.7rem;
+      height: 1.7rem;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .day-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+    .day-title-edit, .day-sub-edit {
+      outline: none;
+      border-radius: 4px;
+      padding: 0 0.2rem;
+      cursor: text;
+    }
+    .day-title-edit:hover, .day-sub-edit:hover {
+      background: rgba(56,189,248,0.1);
+    }
+    .day-title-edit:focus, .day-sub-edit:focus {
+      background: rgba(56,189,248,0.18);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+    h2 .day-title-edit {
+      font-size: inherit;
+      font-weight: inherit;
+    }
+
+    .slots {
+      flex: 1;
+      overflow-y: visible;
+      padding: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .slot {
+      background: var(--surface-2);
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      /* expand to fit all cards — no fixed min that clips */
+      min-height: auto;
+      padding: 0.45rem;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .slot.drag-over {
+      background: rgba(56,189,248,0.12);
+      border-color: var(--accent);
+      border-style: solid;
+    }
+    .slot-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.35rem;
+      padding: 0 0.15rem;
+    }
+    .slot-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      min-height: 32px;
+    }
+
+    .memo {
+      background: var(--surface-3);
+      border-left: 4px solid var(--accent);
+      border-radius: 6px;
+      padding: 0.55rem 0.65rem;
+      cursor: grab;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+      transition: transform 0.12s, box-shadow 0.12s, opacity 0.12s;
+      user-select: none;
+      position: relative;
+    }
+    .memo:active { cursor: grabbing; }
+    .memo.dragging { opacity: 0.55; transform: scale(0.97); }
+    .memo.nature { border-left-color: var(--nature); }
+    .memo.culture { border-left-color: var(--culture); }
+    .memo.food { border-left-color: var(--food); }
+    .memo.relax { border-left-color: var(--relax); }
+    .memo.drive { border-left-color: var(--drive); }
+
+    .memo-time {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 0.15rem;
+      letter-spacing: 0.02em;
+    }
+    .memo-title {
+      font-size: 0.84rem;
+      font-weight: 600;
+      line-height: 1.3;
+      margin-bottom: 0.1rem;
+    }
+    .memo-note {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+    .memo-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      margin-top: 0.3rem;
+    }
+    .memo-tag {
+      font-size: 0.62rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: 999px;
+      font-weight: 500;
+      background: rgba(255,255,255,0.06);
+      color: var(--text-muted);
+    }
+    .memo-actions {
+      position: absolute;
+      top: 0.25rem;
+      right: 0.3rem;
+      display: none;
+      gap: 0.15rem;
+    }
+    .memo:hover .memo-actions { display: flex; }
+    .memo-btn {
+      background: rgba(0,0,0,0.35);
+      border: none;
+      color: var(--text-muted);
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .memo-btn:hover { color: #fff; background: rgba(0,0,0,0.55); }
+
+    .add-zone {
+      padding: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .add-btn {
+      width: 100%;
+      background: transparent;
+      border: 1px dashed var(--border);
+      color: var(--text-muted);
+      padding: 0.45rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .add-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(56,189,248,0.06);
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: var(--shadow);
+    }
+    .modal h3 { font-size: 1.05rem; margin-bottom: 1rem; }
+    .form-group { margin-bottom: 0.85rem; }
+    .form-group label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.5rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-family: inherit;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+    }
+    .form-group textarea { min-height: 60px; resize: vertical; }
+    .form-actions {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: flex-end;
+      margin-top: 1rem;
+    }
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--surface-3);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.65rem 1.2rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      z-index: 200;
+      transition: transform 0.25s;
+      box-shadow: var(--shadow);
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 700px) {
+      .day-col { width: 280px; }
+      header h1 { font-size: 1.15rem; }
+      .pool-cards-row .memo { width: 100%; }
+    }
+    @media print {
+      .header-actions, .add-zone, .memo-actions, .day-move-btns { display: none !important; }
+      .board-wrap { overflow: visible; height: auto; }
+      .board { flex-wrap: wrap; }
+      .day-col { break-inside: avoid; max-height: none; }
+      .slots { overflow: visible; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>🇮🇸 Iceland 7-Day Plan</h1>
+      <p>Drag blocks to schedule · Edit cards for times · Export for sharing</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn" onclick="resetBoard()">Reset to default</button>
+      <button class="btn primary" onclick="exportImage()">Export PNG</button>
+      <button class="btn primary" onclick="exportPDF()">Export PDF</button>
+    </div>
+  </header>
+
+  <div class="legend">
+    <div class="legend-item"><span class="legend-dot nature"></span> Nature</div>
+    <div class="legend-item"><span class="legend-dot culture"></span> Culture</div>
+    <div class="legend-item"><span class="legend-dot food"></span> Food</div>
+    <div class="legend-item"><span class="legend-dot relax"></span> Relax</div>
+    <div class="legend-item"><span class="legend-dot drive"></span> Transit</div>
+    <div class="legend-item" style="margin-left:auto;color:var(--text-muted)">Drag cards · Edit for exact start/end times · ← → move days</div>
+  </div>
+
+  <!-- Unassigned at top -->
+  <div class="pool-top" id="pool-top">
+    <div class="pool-top-inner">
+      <div class="pool-top-header">
+        <div>
+          <h2>📋 Unassigned</h2>
+          <div class="day-sub">Park cards here · drag onto a day to schedule</div>
+        </div>
+        <button class="btn" onclick="openAddModal('pool', 'pool')">+ New memo</button>
+      </div>
+      <div class="pool-slot-wrap slot" data-day-id="pool" data-period="pool" id="pool-slot">
+        <div class="pool-cards-row slot-cards" data-day="pool" data-period="pool" id="pool-cards"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="board-wrap">
+    <div class="board" id="board"></div>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <h3 id="modal-title">Edit activity</h3>
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="f-title" placeholder="e.g. Seljalandsfoss" />
+      </div>
+      <div class="form-group">
+        <label>Note</label>
+        <textarea id="f-note" placeholder="Optional short note"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Start time (optional)</label>
+          <input type="time" id="f-start" />
+        </div>
+        <div class="form-group">
+          <label>End time (optional)</label>
+          <input type="time" id="f-end" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Type</label>
+        <select id="f-type">
+          <option value="nature">Nature</option>
+          <option value="culture">Culture</option>
+          <option value="food">Food</option>
+          <option value="relax">Relax</option>
+          <option value="drive">Transit</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Section</label>
+        <select id="f-period">
+          <option value="am">AM</option>
+          <option value="pm">PM</option>
+        </select>
+      </div>
+      <div class="form-actions">
+        <button class="btn" onclick="closeModal()">Cancel</button>
+        <button class="btn primary" onclick="saveMemo()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const PERIODS = [
+      { id: 'am', label: 'AM · Morning' },
+      { id: 'pm', label: 'PM · Afternoon / Evening' },
+    ];
+
+    const DAYS = [
+      { id: 'd1', num: 1, title: '21 Nov · Arrival', sub: 'Reykjavík' },
+      { id: 'd2', num: 2, title: '22 Nov · South Coast D1', sub: 'Skaftafell area' },
+      { id: 'd3', num: 3, title: '23 Nov · South Coast D2', sub: 'Return Reykjavík' },
+      { id: 'd4', num: 4, title: '24 Nov · City', sub: 'Reykjavík' },
+      { id: 'd5', num: 5, title: '25 Nov · Golden Coast', sub: 'Reykjavík' },
+      { id: 'd6', num: 6, title: '26 Nov · City', sub: 'Reykjavík' },
+      { id: 'd7', num: 7, title: '27 Nov · Departure 11:55', sub: 'Airport by 09:55' },
+    ];
+
+    // memos: { id, dayId, period, title, note, type, start, end }
+    // Order in this array = initial display order (id sequence as listed)
+    const DEFAULT_MEMOS = [
+      // Day 1 — 21 Nov
+      { id: 'm1', dayId: 'd1', period: 'am', title: 'Land KEF 10:50', note: 'Clearance ~40 min + Flybus ~50 min', type: 'drive', start: '10:50', end: '12:25' },
+      { id: 'm2', dayId: 'd1', period: 'pm', title: 'Check-in + lunch', note: '', type: 'food', start: '13:00', end: '' },
+      { id: 'm3', dayId: 'd1', period: 'pm', title: 'Hallgrímskirkja', note: '哈德格里米爾教堂', type: 'culture', start: '', end: '' },
+      { id: 'm4', dayId: 'd1', period: 'pm', title: 'National Museum of Iceland', note: '', type: 'culture', start: '', end: '' },
+      { id: 'm5', dayId: 'd1', period: 'pm', title: 'Kaffihús Vesturbæjar', note: 'Melhagi 20, 107 Reykjavík', type: 'relax', start: '', end: '' },
+      { id: 'm6', dayId: 'd1', period: 'pm', title: 'How to become Icelandic in 60 min', note: 'Harpa · Kaldalón', type: 'culture', start: '19:00', end: '20:00' },
+      { id: 'm7', dayId: 'd1', period: 'pm', title: 'Dinner', note: '', type: 'food', start: '', end: '' },
+
+      // Day 2–3 — 2-Day South Coast + Ice Cave
+      { id: 'tour-sc1', dayId: 'd2', period: 'am', title: '★ 2-Day South Coast + Ice Cave', note: '2-day · Pickup 09:00 · South coast day', type: 'nature', start: '09:00', end: '' },
+      { id: 'tour-sc1b', dayId: 'd2', period: 'am', title: '★ Waterfalls', note: 'Seljalandsfoss · Skógafoss', type: 'nature', start: '', end: '' },
+      { id: 'tour-sc1c', dayId: 'd2', period: 'pm', title: '★ Black Sand Beach', note: 'Reynisfjara', type: 'nature', start: '', end: '' },
+      { id: 'tour-sc1d', dayId: 'd2', period: 'pm', title: '★ Hotel Skaftafell area', note: 'Overnight + optional NL', type: 'relax', start: '', end: '' },
+
+      { id: 'tour-sc2', dayId: 'd3', period: 'am', title: '★ 2-Day tour continues', note: 'Ice cave + lagoon day', type: 'nature', start: '', end: '' },
+      { id: 'tour-sc2b', dayId: 'd3', period: 'am', title: '★ Glacier Lagoon', note: 'Jökulsárlón', type: 'nature', start: '', end: '' },
+      { id: 'tour-sc2c', dayId: 'd3', period: 'am', title: '★ Diamond Beach', note: '', type: 'nature', start: '', end: '' },
+      { id: 'tour-sc2d', dayId: 'd3', period: 'pm', title: '★ Ice Cave', note: '', type: 'nature', start: '', end: '' },
+      { id: 'tour-sc2e', dayId: 'd3', period: 'pm', title: '★ Return Reykjavík', note: 'Drop-off ~21:00', type: 'drive', start: '', end: '21:00' },
+
+      // Day 4
+      { id: 'm29', dayId: 'd4', period: 'am', title: 'Recovery morning', note: '', type: 'relax', start: '', end: '' },
+      { id: 'm30', dayId: 'd4', period: 'am', title: 'Reykjavik Roasters', note: 'Kárastígur 1, 101 Reykjavík', type: 'relax', start: '', end: '' },
+      { id: 'm31', dayId: 'd4', period: 'pm', title: 'Lunch', note: '', type: 'food', start: '', end: '' },
+      { id: 'm32', dayId: 'd4', period: 'pm', title: 'Free afternoon', note: '', type: 'relax', start: '', end: '' },
+      { id: 'm34', dayId: 'd4', period: 'pm', title: 'The Icelandic Phallological Museum', note: '', type: 'culture', start: '', end: '' },
+      { id: 'm35', dayId: 'd4', period: 'pm', title: 'Dinner', note: '', type: 'food', start: '', end: '' },
+
+      // Day 5 — Mokka + GC Aurora
+      { id: 'm-mokka', dayId: 'd5', period: 'am', title: 'Breakfast · Mokka Kaffi', note: 'Skólavörðustígur', type: 'food', start: '', end: '' },
+      { id: 'm-free', dayId: 'd5', period: 'am', title: 'Free morning', note: '', type: 'relax', start: '', end: '' },
+      { id: 'tour-gc', dayId: 'd5', period: 'pm', title: '★ Golden Circle Aurora Surprise', note: 'Half-day · Pickup 12:00', type: 'nature', start: '12:00', end: '' },
+      { id: 'tour-gc2', dayId: 'd5', period: 'pm', title: '★ GC continues', note: 'Geysir · Gullfoss · Kerið', type: 'nature', start: '', end: '' },
+      { id: 'tour-gc3', dayId: 'd5', period: 'pm', title: '★ Dinner', note: 'Drop-off Reykjavík', type: 'food', start: '', end: '' },
+      { id: 'tour-gc4', dayId: 'd5', period: 'pm', title: '★ Northern Lights hunt', note: 'Pickup ~20:30 · return ~00:00', type: 'nature', start: '20:30', end: '00:00' },
+
+      // Day 6
+      { id: 'm36', dayId: 'd6', period: 'am', title: 'Free morning', note: '', type: 'relax', start: '', end: '' },
+      { id: 'm37', dayId: 'd6', period: 'am', title: 'City walk', note: '', type: 'culture', start: '', end: '' },
+      { id: 'm38', dayId: 'd6', period: 'pm', title: 'Lunch', note: '', type: 'food', start: '', end: '' },
+      { id: 'm40', dayId: 'd6', period: 'pm', title: 'Cafe / Bookstore', note: '', type: 'relax', start: '', end: '' },
+      { id: 'm42', dayId: 'd6', period: 'pm', title: 'Dinner', note: '', type: 'food', start: '', end: '' },
+
+      // Day 7 — Departure 11:55
+      { id: 'm43', dayId: 'd7', period: 'am', title: 'Breakfast + pack', note: 'Leave ~09:05', type: 'food', start: '', end: '09:05' },
+      { id: 'm44', dayId: 'd7', period: 'am', title: 'Transfer to KEF', note: '2h before flight', type: 'drive', start: '09:05', end: '09:55' },
+      { id: 'm45', dayId: 'd7', period: 'am', title: 'Departure 11:55', note: '', type: 'drive', start: '11:55', end: '' },
+
+      // Unassigned pool defaults
+      { id: 'pool-12tonar', dayId: 'pool', period: 'pool', title: '12 Tónar', note: 'Record shop · Skólavörðustígur', type: 'culture', start: '', end: '' },
+      { id: 'pool-bioparadis', dayId: 'pool', period: 'pool', title: 'Bíó Paradís', note: 'Cinema · Hverfisgata', type: 'culture', start: '', end: '' },
+      { id: 'pool-idazimsen', dayId: 'pool', period: 'pool', title: 'Iða Zimsen', note: 'Cafe / hangout', type: 'relax', start: '', end: '' },
+    ];
+
+    let memos = [];
+    let editingId = null;
+    let addTarget = { dayId: null, period: 'am' };
+    let draggedId = null;
+
+    let days = [];
+
+    function loadState() {
+      try {
+        const saved = localStorage.getItem('iceland-kanban-v9');
+        if (saved) {
+          const data = JSON.parse(saved);
+          memos = data.memos || data;
+          if (data.days) days = data.days;
+          else days = JSON.parse(JSON.stringify(DAYS));
+          return;
+        }
+      } catch (e) {}
+      memos = JSON.parse(JSON.stringify(DEFAULT_MEMOS));
+      days = JSON.parse(JSON.stringify(DAYS));
+    }
+    function saveState() {
+      localStorage.setItem('iceland-kanban-v9', JSON.stringify({ memos, days }));
+    }
+    function uid() {
+      return 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    }
+
+    function formatTimeRange(start, end) {
+      if (!start && !end) return '';
+      if (start && end) return start + ' – ' + end;
+      if (start) return 'from ' + start;
+      return 'until ' + end;
+    }
+
+    function createMemoEl(m) {
+      const el = document.createElement('div');
+      el.className = 'memo ' + m.type;
+      el.draggable = true;
+      el.dataset.id = m.id;
+      const timeStr = formatTimeRange(m.start, m.end);
+      el.innerHTML = `
+        <div class="memo-actions">
+          <button class="memo-btn" title="Edit" onclick="event.stopPropagation(); openEditModal('${m.id}')">✎</button>
+          <button class="memo-btn" title="Delete" onclick="event.stopPropagation(); deleteMemo('${m.id}')">×</button>
+        </div>
+        ${timeStr ? `<div class="memo-time">${timeStr}</div>` : ''}
+        <div class="memo-title">${escapeHtml(m.title)}</div>
+        ${m.note ? `<div class="memo-note">${escapeHtml(m.note)}</div>` : ''}
+        <div class="memo-tags"><span class="memo-tag">${m.type}</span></div>
+      `;
+      el.addEventListener('dragstart', onDragStart);
+      el.addEventListener('dragend', onDragEnd);
+      return el;
+    }
+
+    function escapeHtml(str) {
+      const d = document.createElement('div');
+      d.textContent = str || '';
+      return d.innerHTML;
+    }
+
+    /** Stable order by original array position (id sequence in DEFAULT / memos array) */
+    function sortByIdSequence(list) {
+      return list.slice().sort((a, b) => {
+        const ia = memos.findIndex(m => m.id === a.id);
+        const ib = memos.findIndex(m => m.id === b.id);
+        return ia - ib;
+      });
+    }
+
+    function renderPool() {
+      const poolCards = document.getElementById('pool-cards');
+      if (!poolCards) return;
+      poolCards.innerHTML = '';
+      const list = sortByIdSequence(memos.filter(m => m.dayId === 'pool'));
+      list.forEach(m => poolCards.appendChild(createMemoEl(m)));
+    }
+
+    function renderBoard() {
+      const board = document.getElementById('board');
+      board.innerHTML = '';
+
+      days.forEach((day, dayIndex) => {
+        const col = document.createElement('div');
+        col.className = 'day-col';
+        col.dataset.dayId = day.id;
+        const canLeft = dayIndex > 0;
+        const canRight = dayIndex < days.length - 1;
+        col.innerHTML = `
+          <div class="day-col-header">
+            <div class="day-col-header-row">
+              <h2>
+                <span class="day-num">${day.num}</span>
+                <span class="day-title-edit" contenteditable="true" data-day-id="${day.id}" data-field="title" spellcheck="false">${escapeHtml(day.title)}</span>
+              </h2>
+              <div class="day-move-btns">
+                <button class="day-move-btn" title="Move day left" ${canLeft ? '' : 'disabled'} onclick="moveDay('${day.id}', -1)">←</button>
+                <button class="day-move-btn" title="Move day right" ${canRight ? '' : 'disabled'} onclick="moveDay('${day.id}', 1)">→</button>
+              </div>
+            </div>
+            <div class="day-sub day-sub-edit" contenteditable="true" data-day-id="${day.id}" data-field="sub" spellcheck="false">${escapeHtml(day.sub)}</div>
+          </div>
+          <div class="slots" id="slots-${day.id}"></div>
+        `;
+        col.querySelectorAll('[contenteditable]').forEach(el => {
+          el.addEventListener('blur', () => {
+            const id = el.dataset.dayId;
+            const field = el.dataset.field;
+            const d = days.find(x => x.id === id);
+            if (d) {
+              d[field] = el.textContent.trim();
+              saveState();
+            }
+          });
+          el.addEventListener('keydown', e => {
+            if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
+          });
+        });
+        board.appendChild(col);
+
+        const slotsEl = col.querySelector('.slots');
+        PERIODS.forEach(period => {
+          const slotDiv = document.createElement('div');
+          slotDiv.className = 'slot';
+          slotDiv.dataset.dayId = day.id;
+          slotDiv.dataset.period = period.id;
+          slotDiv.innerHTML = `
+            <div class="slot-label">${period.label}</div>
+            <div class="slot-cards" data-day="${day.id}" data-period="${period.id}"></div>
+          `;
+          slotDiv.addEventListener('dragover', onDragOver);
+          slotDiv.addEventListener('dragleave', onDragLeave);
+          slotDiv.addEventListener('drop', onDrop);
+          slotsEl.appendChild(slotDiv);
+
+          const cardsEl = slotDiv.querySelector('.slot-cards');
+          // Order by id sequence in memos array (not by start time)
+          const list = sortByIdSequence(
+            memos.filter(m => m.dayId === day.id && m.period === period.id)
+          );
+          list.forEach(m => cardsEl.appendChild(createMemoEl(m)));
+        });
+      });
+
+      renderPool();
+    }
+
+    function moveDay(dayId, direction) {
+      const idx = days.findIndex(d => d.id === dayId);
+      if (idx < 0) return;
+      const newIdx = idx + direction;
+      if (newIdx < 0 || newIdx >= days.length) return;
+      const tmp = days[idx];
+      days[idx] = days[newIdx];
+      days[newIdx] = tmp;
+      // Renumber days 1..n to match visual order
+      days.forEach((d, i) => { d.num = i + 1; });
+      saveState();
+      renderBoard();
+      showToast(direction < 0 ? 'Moved day left' : 'Moved day right');
+    }
+
+    function onDragStart(e) {
+      draggedId = e.target.dataset.id;
+      e.target.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', draggedId);
+    }
+    function onDragEnd(e) {
+      e.target.classList.remove('dragging');
+      document.querySelectorAll('.slot').forEach(s => s.classList.remove('drag-over'));
+      draggedId = null;
+    }
+    function onDragOver(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      e.currentTarget.classList.add('drag-over');
+    }
+    function onDragLeave(e) {
+      e.currentTarget.classList.remove('drag-over');
+    }
+    function onDrop(e) {
+      e.preventDefault();
+      const slot = e.currentTarget;
+      slot.classList.remove('drag-over');
+      const id = e.dataTransfer.getData('text/plain') || draggedId;
+      if (!id) return;
+      const dayId = slot.dataset.dayId;
+      const period = slot.dataset.period;
+      const memo = memos.find(m => m.id === id);
+      if (!memo) return;
+      memo.dayId = dayId;
+      memo.period = period === 'pool' ? 'pool' : period;
+      if (dayId === 'pool') memo.period = 'pool';
+      saveState();
+      renderBoard();
+      showToast('Moved: ' + memo.title);
+    }
+
+    function openEditModal(id) {
+      const m = memos.find(x => x.id === id);
+      if (!m) return;
+      editingId = id;
+      addTarget = { dayId: null, period: null };
+      document.getElementById('modal-title').textContent = 'Edit activity';
+      document.getElementById('f-title').value = m.title;
+      document.getElementById('f-note').value = m.note || '';
+      document.getElementById('f-start').value = m.start || '';
+      document.getElementById('f-end').value = m.end || '';
+      document.getElementById('f-type').value = m.type;
+      document.getElementById('f-period').value = (m.period === 'pm') ? 'pm' : 'am';
+      document.getElementById('modal').classList.add('show');
+      document.getElementById('f-title').focus();
+    }
+
+    function openAddModal(dayId, period) {
+      editingId = null;
+      addTarget = { dayId, period: period || 'am' };
+      document.getElementById('modal-title').textContent = 'Add activity';
+      document.getElementById('f-title').value = '';
+      document.getElementById('f-note').value = '';
+      document.getElementById('f-start').value = '';
+      document.getElementById('f-end').value = '';
+      document.getElementById('f-type').value = 'nature';
+      document.getElementById('f-period').value = period === 'pm' ? 'pm' : 'am';
+      document.getElementById('modal').classList.add('show');
+      document.getElementById('f-title').focus();
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('show');
+      editingId = null;
+    }
+
+    function saveMemo() {
+      const title = document.getElementById('f-title').value.trim();
+      if (!title) { showToast('Title is required'); return; }
+      const note = document.getElementById('f-note').value.trim();
+      const type = document.getElementById('f-type').value;
+      const start = document.getElementById('f-start').value;
+      const end = document.getElementById('f-end').value;
+      const period = document.getElementById('f-period').value;
+
+      if (editingId) {
+        const m = memos.find(x => x.id === editingId);
+        if (m) {
+          m.title = title;
+          m.note = note;
+          m.type = type;
+          m.start = start;
+          m.end = end;
+          if (m.dayId !== 'pool') m.period = period;
+        }
+      } else {
+        const newMemo = {
+          id: uid(),
+          dayId: addTarget.dayId,
+          period: addTarget.period === 'pool' ? 'pool' : (period || addTarget.period),
+          title, note, type, start, end
+        };
+        if (addTarget.dayId === 'pool') {
+          newMemo.dayId = 'pool';
+          newMemo.period = 'pool';
+        }
+        memos.push(newMemo);
+      }
+      saveState();
+      closeModal();
+      renderBoard();
+      showToast(editingId ? 'Updated' : 'Added');
+    }
+
+    function deleteMemo(id) {
+      if (!confirm('Delete this activity?')) return;
+      memos = memos.filter(m => m.id !== id);
+      saveState();
+      renderBoard();
+      showToast('Deleted');
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 1800);
+    }
+
+    function resetBoard() {
+      if (!confirm('Reset to the default 7-day plan? Your changes will be lost.')) return;
+      memos = JSON.parse(JSON.stringify(DEFAULT_MEMOS));
+      days = JSON.parse(JSON.stringify(DAYS));
+      saveState();
+      renderBoard();
+      showToast('Reset to default');
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+    document.getElementById('modal').addEventListener('click', e => {
+      if (e.target.id === 'modal') closeModal();
+    });
+
+    async function exportImage() {
+      showToast('Rendering image…');
+      const board = document.getElementById('board');
+      const wrap = document.querySelector('.board-wrap');
+      const prevH = wrap.style.height;
+      const prevO = wrap.style.overflow;
+      wrap.style.height = 'auto';
+      wrap.style.overflow = 'visible';
+      board.style.minHeight = board.scrollHeight + 'px';
+      try {
+        const canvas = await html2canvas(board, {
+          backgroundColor: '#0b1220',
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          windowWidth: board.scrollWidth,
+          windowHeight: board.scrollHeight
+        });
+        const a = document.createElement('a');
+        a.download = 'iceland-7day-timetable.png';
+        a.href = canvas.toDataURL('image/png');
+        a.click();
+        showToast('PNG downloaded');
+      } catch (e) {
+        console.error(e);
+        showToast('Image export failed');
+      } finally {
+        wrap.style.height = prevH;
+        wrap.style.overflow = prevO;
+      }
+    }
+
+    async function exportPDF() {
+      showToast('Rendering PDF…');
+      const board = document.getElementById('board');
+      const wrap = document.querySelector('.board-wrap');
+      const prevH = wrap.style.height;
+      const prevO = wrap.style.overflow;
+      wrap.style.height = 'auto';
+      wrap.style.overflow = 'visible';
+      try {
+        const canvas = await html2canvas(board, {
+          backgroundColor: '#0b1220',
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          windowWidth: board.scrollWidth,
+          windowHeight: board.scrollHeight
+        });
+        const imgData = canvas.toDataURL('image/png');
+        const { jsPDF } = window.jspdf;
+        const pxToMm = 0.264583;
+        const wMm = canvas.width * pxToMm;
+        const hMm = canvas.height * pxToMm;
+        const orientation = wMm > hMm ? 'l' : 'p';
+        const pdf = new jsPDF({
+          orientation,
+          unit: 'mm',
+          format: [wMm, hMm]
+        });
+        pdf.addImage(imgData, 'PNG', 0, 0, wMm, hMm);
+        pdf.save('iceland-7day-timetable.pdf');
+        showToast('PDF downloaded');
+      } catch (e) {
+        console.error(e);
+        showToast('PDF export failed — try Print instead');
+      } finally {
+        wrap.style.height = prevH;
+        wrap.style.overflow = prevO;
+      }
+    }
+
+    // Wire pool drop target
+    document.getElementById('pool-slot').addEventListener('dragover', onDragOver);
+    document.getElementById('pool-slot').addEventListener('dragleave', onDragLeave);
+    document.getElementById('pool-slot').addEventListener('drop', onDrop);
+
+    loadState();
+    renderBoard();
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</body>
+</html>
