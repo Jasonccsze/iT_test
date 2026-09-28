@@ -62,7 +62,6 @@
       border-color: rgba(56,189,248,0.35);
     }
 
-    /* Compact Unassigned: title on its own line, thin row of small cards */
     .pool-top {
       padding: 0.35rem 0.65rem 0.45rem;
       background: var(--surface);
@@ -108,7 +107,6 @@
       -webkit-overflow-scrolling: touch;
       padding-bottom: 1px;
     }
-    /* Very compact horizontal cards */
     .pool-cards-row .memo {
       width: auto;
       min-width: 100px;
@@ -446,6 +444,29 @@
       justify-content: flex-end;
       margin-top: 1rem;
     }
+
+    /* Summary modal for sharing */
+    .summary-modal .modal {
+      max-width: 480px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .summary-modal textarea {
+      width: 100%;
+      min-height: 280px;
+      max-height: 55vh;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.75rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+      line-height: 1.45;
+      resize: vertical;
+    }
+
     .toast {
       position: fixed;
       bottom: 1.5rem;
@@ -466,9 +487,7 @@
     @media (max-width: 700px) {
       .day-col { width: 280px; }
       header h1 { font-size: 1.05rem; }
-      .board-wrap {
-        height: calc(100vh - 140px);
-      }
+      .board-wrap { height: calc(100vh - 140px); }
       .board-wrap::-webkit-scrollbar { height: 22px; }
       .board-wrap::-webkit-scrollbar-thumb {
         border-width: 2px;
@@ -491,11 +510,11 @@
     </div>
     <div class="header-actions">
       <button class="btn" onclick="resetBoard()">Reset to default</button>
+      <button class="btn primary" onclick="exportSummary()">Export summary</button>
       <button class="btn primary" onclick="exportImage()">Export PNG</button>
     </div>
   </header>
 
-  <!-- Compact Unassigned: title on own line, small horizontal cards -->
   <div class="pool-top" id="pool-top">
     <div class="pool-top-inner">
       <div class="pool-top-header">
@@ -557,6 +576,19 @@
     </div>
   </div>
 
+  <!-- Summary share modal -->
+  <div class="modal-overlay summary-modal" id="summary-modal">
+    <div class="modal">
+      <h3>Plan summary</h3>
+      <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.65rem;">Copy and paste into a message or notes.</p>
+      <textarea id="summary-text" readonly></textarea>
+      <div class="form-actions">
+        <button class="btn" onclick="closeSummaryModal()">Close</button>
+        <button class="btn primary" onclick="copySummary()">Copy to clipboard</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
 
   <script>
@@ -570,7 +602,7 @@
       { id: 'd2', num: 2, title: '22 Nov · South Coast D1', sub: 'Skaftafell area' },
       { id: 'd3', num: 3, title: '23 Nov · South Coast D2', sub: 'Return Reykjavík' },
       { id: 'd4', num: 4, title: '24 Nov · City', sub: 'Reykjavík' },
-      { id: 'd5', num: 5, title: '25 Nov · Golden Coast', sub: 'Reykjavík & Golden Coast' },
+      { id: 'd5', num: 5, title: '25 Nov · Golden Coast', sub: 'Reykjavík' },
       { id: 'd6', num: 6, title: '26 Nov · City', sub: 'Reykjavík' },
       { id: 'd7', num: 7, title: '27 Nov · Departure 11:55', sub: 'Airport by 09:55' },
     ];
@@ -578,7 +610,6 @@
     const DEFAULT_MEMOS = [
       { id: 'm1', dayId: 'd1', period: 'am', title: 'Land KEF 10:50', note: 'Clearance ~40 min + Flybus ~50 min', type: 'drive', start: '10:50', end: '12:25' },
       { id: 'm2', dayId: 'd1', period: 'pm', title: 'Check-in + lunch', note: '', type: 'food', start: '13:00', end: '' },
-      // Hallgrímskirkja moved to Unassigned
       { id: 'm4', dayId: 'd1', period: 'pm', title: 'National Museum of Iceland', note: '', type: 'culture', start: '', end: '' },
       { id: 'm5', dayId: 'd1', period: 'pm', title: 'Kaffihús Vesturbæjar', note: 'Melhagi 20, 107 Reykjavík', type: 'relax', start: '', end: '' },
       { id: 'm6', dayId: 'd1', period: 'pm', title: 'How to become Icelandic in 60 min', note: 'Harpa · Kaldalón', type: 'culture', start: '19:00', end: '20:00' },
@@ -619,7 +650,6 @@
       { id: 'm44', dayId: 'd7', period: 'am', title: 'Transfer to KEF', note: '2h before flight', type: 'drive', start: '09:05', end: '09:55' },
       { id: 'm45', dayId: 'd7', period: 'am', title: 'Departure 11:55', note: '', type: 'drive', start: '11:55', end: '' },
 
-      // Unassigned (incl. Hallgrímskirkja)
       { id: 'm3', dayId: 'pool', period: 'pool', title: 'Hallgrímskirkja', note: '哈德格里米爾教堂', type: 'culture', start: '', end: '' },
       { id: 'pool-12tonar', dayId: 'pool', period: 'pool', title: '12 Tónar', note: 'Record shop · Skólavörðustígur', type: 'culture', start: '', end: '' },
       { id: 'pool-bioparadis', dayId: 'pool', period: 'pool', title: 'Bíó Paradís', note: 'Cinema · Hverfisgata', type: 'culture', start: '', end: '' },
@@ -634,7 +664,7 @@
 
     function loadState() {
       try {
-        const saved = localStorage.getItem('iceland-kanban-v11');
+        const saved = localStorage.getItem('iceland-kanban-v12');
         if (saved) {
           const data = JSON.parse(saved);
           memos = data.memos || data;
@@ -647,7 +677,7 @@
       days = JSON.parse(JSON.stringify(DAYS));
     }
     function saveState() {
-      localStorage.setItem('iceland-kanban-v11', JSON.stringify({ memos, days }));
+      localStorage.setItem('iceland-kanban-v12', JSON.stringify({ memos, days }));
     }
     function uid() {
       return 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
@@ -919,19 +949,98 @@
       showToast('Reset to default');
     }
 
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+    /* —— Text summary for sharing (includes Unassigned) —— */
+    function buildSummaryText() {
+      const lines = [];
+      lines.push('🇮🇸 Iceland 7-Day Plan');
+      lines.push('─'.repeat(28));
+
+      days.forEach(day => {
+        lines.push('');
+        lines.push(`Day ${day.num} · ${day.title}`);
+        if (day.sub) lines.push(`  (${day.sub})`);
+
+        PERIODS.forEach(period => {
+          const list = sortByIdSequence(
+            memos.filter(m => m.dayId === day.id && m.period === period.id)
+          );
+          if (!list.length) return;
+          lines.push(`  ${period.id.toUpperCase()}`);
+          list.forEach(m => {
+            const t = formatTimeRange(m.start, m.end);
+            const timeBit = t ? ` [${t}]` : '';
+            const noteBit = m.note ? ` — ${m.note}` : '';
+            lines.push(`  • ${m.title}${timeBit}${noteBit}`);
+          });
+        });
+      });
+
+      const pool = sortByIdSequence(memos.filter(m => m.dayId === 'pool'));
+      lines.push('');
+      lines.push('📋 Unassigned');
+      if (pool.length) {
+        pool.forEach(m => {
+          const noteBit = m.note ? ` — ${m.note}` : '';
+          lines.push(`  • ${m.title}${noteBit}`);
+        });
+      } else {
+        lines.push('  (none)');
+      }
+
+      lines.push('');
+      lines.push('─'.repeat(28));
+      return lines.join('\n');
+    }
+
+    function exportSummary() {
+      const text = buildSummaryText();
+      document.getElementById('summary-text').value = text;
+      document.getElementById('summary-modal').classList.add('show');
+    }
+
+    function closeSummaryModal() {
+      document.getElementById('summary-modal').classList.remove('show');
+    }
+
+    async function copySummary() {
+      const text = document.getElementById('summary-text').value;
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast('Copied to clipboard');
+      } catch (e) {
+        document.getElementById('summary-text').select();
+        try {
+          document.execCommand('copy');
+          showToast('Copied to clipboard');
+        } catch (e2) {
+          showToast('Select text and copy manually');
+        }
+      }
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closeModal();
+        closeSummaryModal();
+      }
+    });
     document.getElementById('modal').addEventListener('click', e => {
       if (e.target.id === 'modal') closeModal();
     });
+    document.getElementById('summary-modal').addEventListener('click', e => {
+      if (e.target.id === 'summary-modal') closeSummaryModal();
+    });
 
     /**
-     * Export PNG always in a mobile-readable vertical stack:
-     * each day column is full phone width so the whole plan is viewable by scrolling down.
+     * PNG export: 3×3-ish grid (4 + 3 days) so aspect ratio is closer to square,
+     * not one tall stack of 7 days.
      */
     async function exportImage() {
       showToast('Rendering image…');
       const board = document.getElementById('board');
       const wrap = document.querySelector('.board-wrap');
+      const cols = Array.from(board.querySelectorAll('.day-col'));
+
       const prev = {
         wrapH: wrap.style.height,
         wrapO: wrap.style.overflow,
@@ -939,29 +1048,39 @@
         boardFlexDir: board.style.flexDirection,
         boardFlexWrap: board.style.flexWrap,
         boardMinW: board.style.minWidth,
-        boardGap: board.style.gap,
         boardW: board.style.width,
-        cols: []
+        boardGap: board.style.gap,
+        colStyles: cols.map(c => ({
+          w: c.style.width,
+          maxW: c.style.maxWidth,
+          flex: c.style.flex
+        }))
       };
 
-      const EXPORT_WIDTH = 390; // typical phone content width
+      // ~3 columns wide → nearer square than 7-wide or 7-tall
+      const COL_W = 260;
+      const GAP = 10;
+      const COLS_PER_ROW = 3;
+      const boardW = COLS_PER_ROW * COL_W + (COLS_PER_ROW - 1) * GAP;
 
       wrap.style.height = 'auto';
       wrap.style.overflow = 'visible';
 
       board.style.display = 'flex';
-      board.style.flexDirection = 'column';
-      board.style.flexWrap = 'nowrap';
+      board.style.flexDirection = 'row';
+      board.style.flexWrap = 'wrap';
       board.style.minWidth = '0';
-      board.style.width = EXPORT_WIDTH + 'px';
-      board.style.gap = '10px';
+      board.style.width = boardW + 'px';
+      board.style.gap = GAP + 'px';
 
-      board.querySelectorAll('.day-col').forEach(col => {
-        prev.cols.push({ w: col.style.width, maxW: col.style.maxWidth });
-        col.style.width = '100%';
-        col.style.maxWidth = EXPORT_WIDTH + 'px';
+      cols.forEach(col => {
+        col.style.width = COL_W + 'px';
+        col.style.maxWidth = COL_W + 'px';
+        col.style.flex = '0 0 ' + COL_W + 'px';
       });
 
+      // Force layout before measure
+      void board.offsetHeight;
       board.style.minHeight = board.scrollHeight + 'px';
 
       try {
@@ -970,15 +1089,15 @@
           scale: 2,
           useCORS: true,
           logging: false,
-          width: EXPORT_WIDTH,
-          windowWidth: EXPORT_WIDTH,
+          width: boardW,
+          windowWidth: boardW,
           windowHeight: board.scrollHeight
         });
         const a = document.createElement('a');
         a.download = 'iceland-7day-timetable.png';
         a.href = canvas.toDataURL('image/png');
         a.click();
-        showToast('PNG downloaded (mobile layout)');
+        showToast('PNG downloaded');
       } catch (e) {
         console.error(e);
         showToast('Image export failed');
@@ -991,10 +1110,11 @@
         board.style.minWidth = prev.boardMinW;
         board.style.width = prev.boardW;
         board.style.gap = prev.boardGap;
-        board.querySelectorAll('.day-col').forEach((col, i) => {
-          if (prev.cols[i]) {
-            col.style.width = prev.cols[i].w;
-            col.style.maxWidth = prev.cols[i].maxW;
+        cols.forEach((col, i) => {
+          if (prev.colStyles[i]) {
+            col.style.width = prev.colStyles[i].w;
+            col.style.maxWidth = prev.colStyles[i].maxW;
+            col.style.flex = prev.colStyles[i].flex;
           }
         });
       }
