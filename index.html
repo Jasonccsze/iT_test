@@ -44,14 +44,14 @@
       justify-content: space-between;
     }
     header h1 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; }
-    .header-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+    .header-actions { display: flex; gap: 0.45rem; flex-wrap: wrap; align-items: center; }
     .btn {
       background: var(--surface-2);
       color: var(--text);
       border: 1px solid var(--border);
-      padding: 0.4rem 0.85rem;
+      padding: 0.4rem 0.75rem;
       border-radius: 8px;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       cursor: pointer;
       transition: all 0.15s;
     }
@@ -60,6 +60,11 @@
       background: rgba(56,189,248,0.15);
       color: var(--accent);
       border-color: rgba(56,189,248,0.35);
+    }
+    .btn.active-toggle {
+      background: rgba(52,211,153,0.18);
+      color: var(--nature);
+      border-color: rgba(52,211,153,0.4);
     }
 
     .pool-top {
@@ -159,15 +164,16 @@
     }
     .board {
       display: flex;
-      gap: 0.85rem;
+      gap: 0.7rem;
       min-width: max-content;
       height: auto;
       align-items: flex-start;
       padding-bottom: 0.5rem;
     }
 
+    /* Slightly narrower day columns */
     .day-col {
-      width: 300px;
+      width: 260px;
       flex-shrink: 0;
       background: var(--surface);
       border-radius: var(--radius);
@@ -178,7 +184,7 @@
       max-height: none;
     }
     .day-col-header {
-      padding: 0.85rem 1rem;
+      padding: 0.7rem 0.75rem;
       background: linear-gradient(90deg, rgba(56,189,248,0.12), transparent);
       border-bottom: 1px solid var(--border);
       border-radius: var(--radius) var(--radius) 0 0;
@@ -187,30 +193,30 @@
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 0.4rem;
+      gap: 0.35rem;
     }
     .day-col-header h2 {
-      font-size: 1rem;
+      font-size: 0.9rem;
       font-weight: 650;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
       flex: 1;
       min-width: 0;
     }
     .day-move-btns {
       display: flex;
-      gap: 0.2rem;
+      gap: 0.15rem;
       flex-shrink: 0;
     }
     .day-move-btn {
       background: var(--surface-2);
       border: 1px solid var(--border);
       color: var(--text-muted);
-      width: 26px;
-      height: 26px;
+      width: 24px;
+      height: 24px;
       border-radius: 6px;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -229,25 +235,25 @@
     .day-num {
       background: var(--accent);
       color: #0b1220;
-      width: 1.7rem;
-      height: 1.7rem;
+      width: 1.55rem;
+      height: 1.55rem;
       border-radius: 50%;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.85rem;
+      font-size: 0.78rem;
       font-weight: 700;
       flex-shrink: 0;
     }
     .day-sub {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
-      margin-top: 0.2rem;
+      margin-top: 0.15rem;
     }
     .day-title-edit, .day-sub-edit {
       outline: none;
       border-radius: 4px;
-      padding: 0 0.2rem;
+      padding: 0 0.15rem;
       cursor: text;
     }
     .day-title-edit:hover, .day-sub-edit:hover {
@@ -265,10 +271,10 @@
     .slots {
       flex: 1;
       overflow-y: visible;
-      padding: 0.5rem;
+      padding: 0.4rem;
       display: flex;
       flex-direction: column;
-      gap: 0.55rem;
+      gap: 0.45rem;
     }
 
     .slot {
@@ -276,7 +282,7 @@
       border: 1px dashed var(--border);
       border-radius: 8px;
       min-height: auto;
-      padding: 0.45rem;
+      padding: 0.4rem;
       transition: background 0.15s, border-color 0.15s;
     }
     .slot.drag-over {
@@ -285,26 +291,26 @@
       border-style: solid;
     }
     .slot-label {
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 700;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: 0.35rem;
-      padding: 0 0.15rem;
+      margin-bottom: 0.3rem;
+      padding: 0 0.1rem;
     }
     .slot-cards {
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
-      min-height: 32px;
+      gap: 0.35rem;
+      min-height: 28px;
     }
 
     .memo {
       background: var(--surface-3);
       border-left: 4px solid var(--accent);
       border-radius: 6px;
-      padding: 0.55rem 0.65rem;
+      padding: 0.45rem 0.55rem;
       cursor: grab;
       box-shadow: 0 2px 8px rgba(0,0,0,0.25);
       transition: transform 0.12s, box-shadow 0.12s, opacity 0.12s;
@@ -320,32 +326,32 @@
     .memo.drive { border-left-color: var(--drive); }
 
     .memo-time {
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       font-weight: 600;
       color: var(--accent);
-      margin-bottom: 0.15rem;
+      margin-bottom: 0.12rem;
       letter-spacing: 0.02em;
     }
     .memo-title {
-      font-size: 0.84rem;
+      font-size: 0.8rem;
       font-weight: 600;
       line-height: 1.3;
-      margin-bottom: 0.1rem;
+      margin-bottom: 0.08rem;
     }
     .memo-note {
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       color: var(--text-muted);
       line-height: 1.35;
     }
     .memo-tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.25rem;
-      margin-top: 0.3rem;
+      gap: 0.2rem;
+      margin-top: 0.25rem;
     }
     .memo-tag {
-      font-size: 0.62rem;
-      padding: 0.1rem 0.4rem;
+      font-size: 0.58rem;
+      padding: 0.08rem 0.35rem;
       border-radius: 999px;
       font-weight: 500;
       background: rgba(255,255,255,0.06);
@@ -353,20 +359,20 @@
     }
     .memo-actions {
       position: absolute;
-      top: 0.25rem;
-      right: 0.3rem;
+      top: 0.2rem;
+      right: 0.25rem;
       display: none;
-      gap: 0.15rem;
+      gap: 0.12rem;
     }
     .memo:hover .memo-actions { display: flex; }
     .memo-btn {
       background: rgba(0,0,0,0.35);
       border: none;
       color: var(--text-muted);
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       border-radius: 4px;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -443,9 +449,9 @@
       gap: 0.5rem;
       justify-content: flex-end;
       margin-top: 1rem;
+      flex-wrap: wrap;
     }
 
-    /* Summary modal for sharing */
     .summary-modal .modal {
       max-width: 480px;
       max-height: 85vh;
@@ -485,7 +491,7 @@
     .toast.show { transform: translateX(-50%) translateY(0); }
 
     @media (max-width: 700px) {
-      .day-col { width: 280px; }
+      .day-col { width: 240px; }
       header h1 { font-size: 1.05rem; }
       .board-wrap { height: calc(100vh - 140px); }
       .board-wrap::-webkit-scrollbar { height: 22px; }
@@ -506,11 +512,13 @@
 <body>
   <header>
     <div>
-      <h1>🇮🇸 Iceland 7-Day Plan</h1>
+      <h1 id="plan-title">🇮🇸 Iceland 7-Day Plan</h1>
     </div>
     <div class="header-actions">
-      <button class="btn" onclick="resetBoard()">Reset to default</button>
+      <button class="btn" id="btn-day-mode" onclick="toggleDayMode()">8-day (+ empty)</button>
+      <button class="btn" onclick="resetBoard()">Reset</button>
       <button class="btn primary" onclick="exportSummary()">Export summary</button>
+      <button class="btn primary" onclick="openImportModal()">Import summary</button>
       <button class="btn primary" onclick="exportImage()">Export PNG</button>
     </div>
   </header>
@@ -576,7 +584,6 @@
     </div>
   </div>
 
-  <!-- Summary share modal -->
   <div class="modal-overlay summary-modal" id="summary-modal">
     <div class="modal">
       <h3>Plan summary</h3>
@@ -589,6 +596,18 @@
     </div>
   </div>
 
+  <div class="modal-overlay summary-modal" id="import-modal">
+    <div class="modal">
+      <h3>Import summary</h3>
+      <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.65rem;">Paste a previously exported summary. This replaces the current plan.</p>
+      <textarea id="import-text" placeholder="Paste summary text here…"></textarea>
+      <div class="form-actions">
+        <button class="btn" onclick="closeImportModal()">Cancel</button>
+        <button class="btn primary" onclick="importSummary()">Import</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
 
   <script>
@@ -597,7 +616,7 @@
       { id: 'pm', label: 'PM · Afternoon / Evening' },
     ];
 
-    const DAYS = [
+    const DAYS_7 = [
       { id: 'd1', num: 1, title: '21 Nov · Arrival', sub: 'Reykjavík' },
       { id: 'd2', num: 2, title: '22 Nov · South Coast D1', sub: 'Skaftafell area' },
       { id: 'd3', num: 3, title: '23 Nov · South Coast D2', sub: 'Return Reykjavík' },
@@ -606,6 +625,14 @@
       { id: 'd6', num: 6, title: '26 Nov · City', sub: 'Reykjavík' },
       { id: 'd7', num: 7, title: '27 Nov · Departure 11:55', sub: 'Airport by 09:55' },
     ];
+
+    /* Extra empty day inserted before departure in 8-day mode */
+    const EXTRA_DAY = {
+      id: 'd-extra',
+      num: 7,
+      title: 'Extra day',
+      sub: 'Free / flexible'
+    };
 
     const DEFAULT_MEMOS = [
       { id: 'm1', dayId: 'd1', period: 'am', title: 'Land KEF 10:50', note: 'Clearance ~40 min + Flybus ~50 min', type: 'drive', start: '10:50', end: '12:25' },
@@ -661,26 +688,90 @@
     let addTarget = { dayId: null, period: 'am' };
     let draggedId = null;
     let days = [];
+    let planLength = 7; // 7 or 8
 
     function loadState() {
       try {
-        const saved = localStorage.getItem('iceland-kanban-v12');
+        const saved = localStorage.getItem('iceland-kanban-v13');
         if (saved) {
           const data = JSON.parse(saved);
           memos = data.memos || data;
+          planLength = data.planLength === 8 ? 8 : 7;
           if (data.days) days = data.days;
-          else days = JSON.parse(JSON.stringify(DAYS));
+          else days = buildDaysFromLength(planLength);
           return;
         }
       } catch (e) {}
       memos = JSON.parse(JSON.stringify(DEFAULT_MEMOS));
-      days = JSON.parse(JSON.stringify(DAYS));
+      planLength = 7;
+      days = buildDaysFromLength(7);
     }
     function saveState() {
-      localStorage.setItem('iceland-kanban-v12', JSON.stringify({ memos, days }));
+      localStorage.setItem('iceland-kanban-v13', JSON.stringify({ memos, days, planLength }));
     }
     function uid() {
       return 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    }
+
+    function buildDaysFromLength(len) {
+      if (len === 8) {
+        const base = JSON.parse(JSON.stringify(DAYS_7));
+        // Insert empty day before departure (last day)
+        const dep = base.pop();
+        const extra = JSON.parse(JSON.stringify(EXTRA_DAY));
+        base.push(extra);
+        base.push(dep);
+        base.forEach((d, i) => { d.num = i + 1; });
+        return base;
+      }
+      const base = JSON.parse(JSON.stringify(DAYS_7));
+      base.forEach((d, i) => { d.num = i + 1; });
+      return base;
+    }
+
+    function updateTitleAndToggle() {
+      const t = document.getElementById('plan-title');
+      const btn = document.getElementById('btn-day-mode');
+      t.textContent = planLength === 8 ? '🇮🇸 Iceland 8-Day Plan' : '🇮🇸 Iceland 7-Day Plan';
+      if (planLength === 8) {
+        btn.textContent = '7-day mode';
+        btn.classList.add('active-toggle');
+      } else {
+        btn.textContent = '8-day (+ empty)';
+        btn.classList.remove('active-toggle');
+      }
+    }
+
+    /** Switch 7 ↔ 8 days: empty day inserted/removed before departure */
+    function toggleDayMode() {
+      if (planLength === 7) {
+        // Add empty day before departure
+        const depIdx = days.findIndex(d => d.id === 'd7' || /departure/i.test(d.title));
+        const insertAt = depIdx >= 0 ? depIdx : days.length - 1;
+        if (!days.some(d => d.id === 'd-extra')) {
+          const extra = JSON.parse(JSON.stringify(EXTRA_DAY));
+          days.splice(insertAt, 0, extra);
+        }
+        planLength = 8;
+      } else {
+        // Remove empty extra day; move its cards to Unassigned
+        const extraIdx = days.findIndex(d => d.id === 'd-extra');
+        if (extraIdx >= 0) {
+          memos.forEach(m => {
+            if (m.dayId === 'd-extra') {
+              m.dayId = 'pool';
+              m.period = 'pool';
+            }
+          });
+          days.splice(extraIdx, 1);
+        }
+        planLength = 7;
+      }
+      days.forEach((d, i) => { d.num = i + 1; });
+      saveState();
+      updateTitleAndToggle();
+      renderBoard();
+      showToast(planLength === 8 ? '8-day plan (empty day before departure)' : '7-day plan');
     }
 
     function formatTimeRange(start, end) {
@@ -799,6 +890,7 @@
       });
 
       renderPool();
+      updateTitleAndToggle();
     }
 
     function moveDay(dayId, direction) {
@@ -943,16 +1035,16 @@
     function resetBoard() {
       if (!confirm('Reset to the default 7-day plan? Your changes will be lost.')) return;
       memos = JSON.parse(JSON.stringify(DEFAULT_MEMOS));
-      days = JSON.parse(JSON.stringify(DAYS));
+      planLength = 7;
+      days = buildDaysFromLength(7);
       saveState();
       renderBoard();
       showToast('Reset to default');
     }
 
-    /* —— Text summary for sharing (includes Unassigned) —— */
     function buildSummaryText() {
       const lines = [];
-      lines.push('🇮🇸 Iceland 7-Day Plan');
+      lines.push(planLength === 8 ? '🇮🇸 Iceland 8-Day Plan' : '🇮🇸 Iceland 7-Day Plan');
       lines.push('─'.repeat(28));
 
       days.forEach(day => {
@@ -993,8 +1085,7 @@
     }
 
     function exportSummary() {
-      const text = buildSummaryText();
-      document.getElementById('summary-text').value = text;
+      document.getElementById('summary-text').value = buildSummaryText();
       document.getElementById('summary-modal').classList.add('show');
     }
 
@@ -1018,10 +1109,190 @@
       }
     }
 
+    function openImportModal() {
+      document.getElementById('import-text').value = '';
+      document.getElementById('import-modal').classList.add('show');
+      document.getElementById('import-text').focus();
+    }
+    function closeImportModal() {
+      document.getElementById('import-modal').classList.remove('show');
+    }
+
+    /** Parse times like [10:50 – 12:25], [from 13:00], [until 21:00] */
+    function parseTimeBit(s) {
+      let start = '', end = '';
+      const m = s.match(/\[([^\]]+)\]/);
+      if (!m) return { start, end, rest: s };
+      const inner = m[1].trim();
+      const range = inner.match(/^(\d{1,2}:\d{2})\s*[–\-]\s*(\d{1,2}:\d{2})$/);
+      if (range) {
+        start = range[1];
+        end = range[2];
+      } else {
+        const from = inner.match(/^from\s+(\d{1,2}:\d{2})$/i);
+        const until = inner.match(/^until\s+(\d{1,2}:\d{2})$/i);
+        if (from) start = from[1];
+        if (until) end = until[1];
+      }
+      const rest = s.replace(m[0], '').trim();
+      return { start, end, rest };
+    }
+
+    function guessType(title) {
+      const t = title.toLowerCase();
+      if (/land|transfer|flybus|departure|return|airport|kef|drive|pickup|drop/.test(t)) return 'drive';
+      if (/lunch|dinner|breakfast|food|mokka|cafe|kaffi|roasters/.test(t)) return 'food';
+      if (/museum|church|hallgr|harpa|walk|city|cinema|tó nar|12 tónar|paradís|phallolog/.test(t)) return 'culture';
+      if (/hotel|free|recovery|bookstore|zimsen|vesturb|roasters/.test(t)) return 'relax';
+      if (/★|waterfall|glacier|beach|cave|golden|northern|coast|lagoon|diamond|geysir|gullfoss/.test(t)) return 'nature';
+      return 'culture';
+    }
+
+    /**
+     * Import from exported summary text format.
+     * Replaces current days + memos.
+     */
+    function parseSummary(text) {
+      const lines = text.replace(/\r\n/g, '\n').split('\n');
+      const newDays = [];
+      const newMemos = [];
+      let currentDay = null;
+      let currentPeriod = 'am';
+      let inUnassigned = false;
+      let dayCounter = 0;
+
+      for (let raw of lines) {
+        const line = raw.replace(/\s+$/, '');
+        if (!line.trim() || /^[─\-═]+$/.test(line.trim())) continue;
+        if (/Iceland\s+\d+-Day/i.test(line) || line.includes('🇮🇸')) continue;
+
+        // Unassigned section
+        if (/Unassigned/i.test(line)) {
+          inUnassigned = true;
+          currentDay = null;
+          continue;
+        }
+        if (inUnassigned && /^\s*\(none\)\s*$/i.test(line)) continue;
+
+        // Day header: Day N · Title
+        const dayMatch = line.match(/^Day\s+(\d+)\s*[·•.\-]\s*(.+)$/i);
+        if (dayMatch) {
+          inUnassigned = false;
+          dayCounter = parseInt(dayMatch[1], 10);
+          const title = dayMatch[2].trim();
+          // Prefer stable ids for known days
+          let id = 'd' + dayCounter;
+          if (/extra/i.test(title) || /free\s*\/\s*flexible/i.test(title)) id = 'd-extra';
+          else if (/departure/i.test(title)) id = 'd7';
+          else if (dayCounter <= 6) id = 'd' + dayCounter;
+
+          currentDay = {
+            id,
+            num: dayCounter,
+            title,
+            sub: ''
+          };
+          // Avoid duplicate ids when importing 8-day with extra
+          if (newDays.some(d => d.id === id)) {
+            id = 'd-imp-' + dayCounter + '-' + Math.random().toString(36).slice(2, 5);
+            currentDay.id = id;
+          }
+          newDays.push(currentDay);
+          currentPeriod = 'am';
+          continue;
+        }
+
+        // Subtitle: (Reykjavík)
+        const subMatch = line.match(/^\s*\((.+)\)\s*$/);
+        if (subMatch && currentDay && !inUnassigned) {
+          currentDay.sub = subMatch[1].trim();
+          continue;
+        }
+
+        // Period markers
+        if (/^\s*AM\s*$/i.test(line)) { currentPeriod = 'am'; continue; }
+        if (/^\s*PM\s*$/i.test(line)) { currentPeriod = 'pm'; continue; }
+
+        // Bullet activity: • Title [time] — note
+        const bullet = line.match(/^\s*[•\-\*]\s+(.+)$/);
+        if (bullet) {
+          let body = bullet[1].trim();
+          let note = '';
+          const emDash = body.indexOf(' — ');
+          const enDashNote = body.indexOf(' – ');
+          // Prefer em dash as note separator when not inside time bracket
+          if (emDash > 0) {
+            const before = body.slice(0, emDash);
+            // if time bracket already closed, rest is note
+            if (!before.includes('[') || before.includes(']')) {
+              note = body.slice(emDash + 3).trim();
+              body = before.trim();
+            }
+          }
+
+          const { start, end, rest } = parseTimeBit(body);
+          let title = rest.replace(/\s+$/, '').trim();
+          // strip leftover trailing dashes
+          title = title.replace(/\s*[—–]\s*$/, '').trim();
+          if (!title) continue;
+
+          const memo = {
+            id: uid(),
+            dayId: inUnassigned ? 'pool' : (currentDay ? currentDay.id : 'pool'),
+            period: inUnassigned ? 'pool' : currentPeriod,
+            title,
+            note,
+            type: guessType(title),
+            start,
+            end
+          };
+          newMemos.push(memo);
+        }
+      }
+
+      if (!newDays.length) {
+        throw new Error('No days found. Paste a full exported summary.');
+      }
+
+      // Renumber & ensure unique ids
+      const used = new Set();
+      newDays.forEach((d, i) => {
+        d.num = i + 1;
+        if (used.has(d.id)) d.id = 'd-imp-' + d.num;
+        used.add(d.id);
+      });
+
+      return { days: newDays, memos: newMemos };
+    }
+
+    function importSummary() {
+      const text = document.getElementById('import-text').value.trim();
+      if (!text) {
+        showToast('Paste a summary first');
+        return;
+      }
+      try {
+        const parsed = parseSummary(text);
+        if (!confirm('Replace the current plan with the imported summary?')) return;
+        days = parsed.days;
+        memos = parsed.memos;
+        planLength = days.length >= 8 ? 8 : 7;
+        // If 8 days but no d-extra, keep as-is
+        saveState();
+        closeImportModal();
+        renderBoard();
+        showToast('Imported ' + days.length + ' days, ' + memos.length + ' activities');
+      } catch (e) {
+        console.error(e);
+        showToast(e.message || 'Import failed');
+      }
+    }
+
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') {
         closeModal();
         closeSummaryModal();
+        closeImportModal();
       }
     });
     document.getElementById('modal').addEventListener('click', e => {
@@ -1030,11 +1301,10 @@
     document.getElementById('summary-modal').addEventListener('click', e => {
       if (e.target.id === 'summary-modal') closeSummaryModal();
     });
+    document.getElementById('import-modal').addEventListener('click', e => {
+      if (e.target.id === 'import-modal') closeImportModal();
+    });
 
-    /**
-     * PNG export: 3×3-ish grid (4 + 3 days) so aspect ratio is closer to square,
-     * not one tall stack of 7 days.
-     */
     async function exportImage() {
       showToast('Rendering image…');
       const board = document.getElementById('board');
@@ -1057,8 +1327,7 @@
         }))
       };
 
-      // ~3 columns wide → nearer square than 7-wide or 7-tall
-      const COL_W = 260;
+      const COL_W = 240;
       const GAP = 10;
       const COLS_PER_ROW = 3;
       const boardW = COLS_PER_ROW * COL_W + (COLS_PER_ROW - 1) * GAP;
@@ -1079,7 +1348,6 @@
         col.style.flex = '0 0 ' + COL_W + 'px';
       });
 
-      // Force layout before measure
       void board.offsetHeight;
       board.style.minHeight = board.scrollHeight + 'px';
 
@@ -1094,7 +1362,7 @@
           windowHeight: board.scrollHeight
         });
         const a = document.createElement('a');
-        a.download = 'iceland-7day-timetable.png';
+        a.download = 'iceland-plan-timetable.png';
         a.href = canvas.toDataURL('image/png');
         a.click();
         showToast('PNG downloaded');
