@@ -67,100 +67,7 @@
       border-color: rgba(52,211,153,0.4);
     }
 
-    /* —— Unassigned —— */
-    .pool-top {
-      padding: 0.35rem 0.65rem 0.45rem;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-    }
-    .pool-top-inner {
-      background: var(--surface-2);
-      border: 1px dashed var(--border);
-      border-radius: 8px;
-      padding: 0.3rem 0.45rem 0.4rem;
-    }
-    .pool-top-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.4rem;
-      margin-bottom: 0.35rem;
-    }
-    .pool-top-header h2 {
-      font-size: 0.72rem;
-      font-weight: 650;
-      color: var(--text-muted);
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-    }
-    .pool-slot-wrap {
-      border-radius: 6px;
-      transition: background 0.15s, border-color 0.15s;
-      border: 1px solid transparent;
-      padding: 0.15rem 0;
-      min-height: 0;
-    }
-    .pool-slot-wrap.drag-over {
-      background: rgba(56,189,248,0.12);
-      border-color: var(--accent);
-    }
-
-    /*
-      Unassigned layout:
-      - horizontal row of columns
-      - each column = up to 3 cards stacked
-      - scroll sideways for more columns
-    */
-    .pool-cards-row {
-      display: flex;
-      flex-direction: row;       /* columns side by side */
-      flex-wrap: nowrap;
-      align-items: flex-start;
-      gap: 0.4rem;
-      width: 100%;
-      overflow-x: auto;          /* more columns → scroll sideways */
-      overflow-y: hidden;
-      -webkit-overflow-scrolling: touch;
-      padding-bottom: 4px;
-      min-height: calc(3 * 2.35rem + 2 * 0.3rem);
-    }
-    
-    .pool-col-group {
-      display: flex;
-      flex-direction: column;    /* 3 cards stacked in the column */
-      gap: 0.3rem;
-      flex: 0 0 auto;
-      width: 130px;
-    }
-    
-    .pool-cards-row .memo {
-      width: 130px;
-      min-width: 130px;
-      max-width: 130px;
-      height: 2.35rem;
-      min-height: 2.35rem;
-      max-height: 2.35rem;
-      padding: 0.2rem 0.4rem;
-      border-left-width: 3px;
-      overflow: hidden;
-    }
-    
-    .pool-cards-row .memo .memo-title {
-      font-size: 0.7rem;
-      line-height: 1.25;
-      margin-bottom: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    
-    .pool-cards-row .memo .memo-note,
-    .pool-cards-row .memo .memo-tags,
-    .pool-cards-row .memo .memo-time {
-      display: none;
-    }
-
-    /* Thin horizontal scrollbar under Unassigned (synced with board) */
+    /* Thin horizontal scrollbar under header (synced with board) */
     .board-hscroll {
       height: 18px;
       background: var(--surface);
@@ -190,9 +97,7 @@
       scrollbar-width: thin;
       scrollbar-color: var(--accent) var(--surface-2);
     }
-    .board-hscroll-track::-webkit-scrollbar {
-      height: 10px;
-    }
+    .board-hscroll-track::-webkit-scrollbar { height: 10px; }
     .board-hscroll-track::-webkit-scrollbar-track {
       background: var(--surface-2);
       border-radius: 5px;
@@ -203,28 +108,20 @@
       border: none;
       min-width: 40px;
     }
-    .board-hscroll-track::-webkit-scrollbar-thumb:hover {
-      background: #7dd3fc;
-    }
-    .board-hscroll-spacer {
-      height: 1px;
-      pointer-events: none;
-    }
+    .board-hscroll-track::-webkit-scrollbar-thumb:hover { background: #7dd3fc; }
+    .board-hscroll-spacer { height: 1px; pointer-events: none; }
 
     .board-wrap {
       overflow-x: auto;
       overflow-y: auto;
       padding: 0.65rem 0.85rem 1.1rem;
-      height: calc(100vh - 175px);
+      height: calc(100vh - 120px);
       min-height: 240px;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: thin;
       scrollbar-color: var(--accent) var(--surface-2);
     }
-    .board-wrap::-webkit-scrollbar {
-      height: 8px;
-      width: 8px;
-    }
+    .board-wrap::-webkit-scrollbar { height: 8px; width: 8px; }
     .board-wrap::-webkit-scrollbar-track { background: var(--surface-2); }
     .board-wrap::-webkit-scrollbar-thumb {
       background: var(--accent);
@@ -437,24 +334,6 @@
     }
     .memo-btn:hover { color: #fff; background: rgba(0,0,0,0.55); }
 
-    .add-btn {
-      width: auto;
-      background: transparent;
-      border: 1px dashed var(--border);
-      color: var(--text-muted);
-      padding: 0.15rem 0.45rem;
-      border-radius: 5px;
-      font-size: 0.68rem;
-      cursor: pointer;
-      transition: all 0.15s;
-      white-space: nowrap;
-    }
-    .add-btn:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: rgba(56,189,248,0.06);
-    }
-
     .modal-overlay {
       display: none;
       position: fixed;
@@ -550,10 +429,10 @@
     @media (max-width: 700px) {
       .day-col { width: 240px; }
       header h1 { font-size: 1.05rem; }
-      .board-wrap { height: calc(100vh - 170px); }
+      .board-wrap { height: calc(100vh - 110px); }
     }
     @media print {
-      .header-actions, .memo-actions, .day-move-btns, .pool-top-header .add-btn, .board-hscroll { display: none !important; }
+      .header-actions, .memo-actions, .day-move-btns, .board-hscroll { display: none !important; }
       .board-wrap { overflow: visible; height: auto; }
       .board { flex-wrap: wrap; }
       .day-col { break-inside: avoid; max-height: none; }
@@ -569,23 +448,12 @@
     <div class="header-actions">
       <button class="btn" id="btn-day-mode" onclick="toggleDayMode()">8-day (+ empty)</button>
       <button class="btn" onclick="resetBoard()">Reset</button>
+      <button class="btn primary" onclick="openAddModalForNew()">+ New</button>
       <button class="btn primary" onclick="exportSummary()">Export summary</button>
       <button class="btn primary" onclick="openImportModal()">Import summary</button>
       <button class="btn primary" onclick="exportImage()">Export PNG</button>
     </div>
   </header>
-
-  <div class="pool-top" id="pool-top">
-    <div class="pool-top-inner">
-      <div class="pool-top-header">
-        <h2>📋 Unassigned</h2>
-        <button class="add-btn" onclick="openAddModal('pool', 'pool')">+ New</button>
-      </div>
-      <div class="pool-slot-wrap slot" data-day-id="pool" data-period="pool" id="pool-slot">
-        <div class="pool-cards-row slot-cards" data-day="pool" data-period="pool" id="pool-cards"></div>
-      </div>
-    </div>
-  </div>
 
   <div class="board-hscroll" id="board-hscroll">
     <span class="board-hscroll-label">Scroll</span>
@@ -635,6 +503,10 @@
           <option value="am">AM</option>
           <option value="pm">PM</option>
         </select>
+      </div>
+      <div class="form-group" id="f-day-wrap" style="display:none;">
+        <label>Day</label>
+        <select id="f-day"></select>
       </div>
       <div class="form-actions">
         <button class="btn" onclick="closeModal()">Cancel</button>
@@ -699,6 +571,7 @@
     const DEFAULT_MEMOS = [
       { id: 'm1', dayId: 'd1', period: 'am', title: 'Land KEF 10:50', note: 'Clearance ~40 min + Flybus ~50 min', type: 'drive', start: '10:50', end: '12:25' },
       { id: 'm2', dayId: 'd1', period: 'pm', title: 'Check-in + lunch', note: '', type: 'food', start: '13:00', end: '' },
+      { id: 'm3', dayId: 'd1', period: 'pm', title: 'Hallgrímskirkja', note: '哈德格里米爾教堂', type: 'culture', start: '', end: '' },
       { id: 'm4', dayId: 'd1', period: 'pm', title: 'National Museum of Iceland', note: '', type: 'culture', start: '', end: '' },
       { id: 'm5', dayId: 'd1', period: 'pm', title: 'Kaffihús Vesturbæjar', note: 'Melhagi 20, 107 Reykjavík', type: 'relax', start: '', end: '' },
       { id: 'm6', dayId: 'd1', period: 'pm', title: 'How to become Icelandic in 60 min', note: 'Harpa · Kaldalón', type: 'culture', start: '19:00', end: '20:00' },
@@ -733,16 +606,14 @@
       { id: 'm37', dayId: 'd6', period: 'am', title: 'City walk', note: '', type: 'culture', start: '', end: '' },
       { id: 'm38', dayId: 'd6', period: 'pm', title: 'Lunch', note: '', type: 'food', start: '', end: '' },
       { id: 'm40', dayId: 'd6', period: 'pm', title: 'Cafe / Bookstore', note: '', type: 'relax', start: '', end: '' },
+      { id: 'pool-12tonar', dayId: 'd6', period: 'pm', title: '12 Tónar', note: 'Record shop · Skólavörðustígur', type: 'culture', start: '', end: '' },
+      { id: 'pool-bioparadis', dayId: 'd6', period: 'pm', title: 'Bíó Paradís', note: 'Cinema · Hverfisgata', type: 'culture', start: '', end: '' },
+      { id: 'pool-idazimsen', dayId: 'd6', period: 'pm', title: 'Iða Zimsen', note: 'Cafe / hangout', type: 'relax', start: '', end: '' },
       { id: 'm42', dayId: 'd6', period: 'pm', title: 'Dinner', note: '', type: 'food', start: '', end: '' },
 
       { id: 'm43', dayId: 'd7', period: 'am', title: 'Breakfast + pack', note: 'Leave ~09:05', type: 'food', start: '', end: '09:05' },
       { id: 'm44', dayId: 'd7', period: 'am', title: 'Transfer to KEF', note: '2h before flight', type: 'drive', start: '09:05', end: '09:55' },
       { id: 'm45', dayId: 'd7', period: 'am', title: 'Departure 11:55', note: '', type: 'drive', start: '11:55', end: '' },
-
-      { id: 'm3', dayId: 'pool', period: 'pool', title: 'Hallgrímskirkja', note: '哈德格里米爾教堂', type: 'culture', start: '', end: '' },
-      { id: 'pool-12tonar', dayId: 'pool', period: 'pool', title: '12 Tónar', note: 'Record shop · Skólavörðustígur', type: 'culture', start: '', end: '' },
-      { id: 'pool-bioparadis', dayId: 'pool', period: 'pool', title: 'Bíó Paradís', note: 'Cinema · Hverfisgata', type: 'culture', start: '', end: '' },
-      { id: 'pool-idazimsen', dayId: 'pool', period: 'pool', title: 'Iða Zimsen', note: 'Cafe / hangout', type: 'relax', start: '', end: '' },
     ];
 
     let memos = [];
@@ -752,6 +623,7 @@
     let days = [];
     let planLength = 7;
     let syncingScroll = false;
+    let isAddingNew = false;
 
     function dateForDayNum(num) {
       const dt = new Date(TRIP_START.y, TRIP_START.m, TRIP_START.d + (num - 1));
@@ -774,9 +646,24 @@
       return m ? m[1].trim() : title;
     }
 
+    function firstDayId() {
+      return days[0] ? days[0].id : 'd1';
+    }
+
+    /** Move any leftover pool cards onto the board */
+    function migratePoolToBoard() {
+      const fid = firstDayId();
+      memos.forEach(m => {
+        if (m.dayId === 'pool' || m.period === 'pool') {
+          m.dayId = fid;
+          m.period = 'pm';
+        }
+      });
+    }
+
     function loadState() {
       try {
-        const saved = localStorage.getItem('iceland-kanban-v16');
+        const saved = localStorage.getItem('iceland-kanban-v17');
         if (saved) {
           const data = JSON.parse(saved);
           memos = data.memos || data;
@@ -788,6 +675,7 @@
             days = buildDaysFromLength(planLength);
           }
           ensureSouthCoastPairOrder();
+          migratePoolToBoard();
           syncDayTitles();
           return;
         }
@@ -798,7 +686,7 @@
       syncDayTitles();
     }
     function saveState() {
-      localStorage.setItem('iceland-kanban-v16', JSON.stringify({ memos, days, planLength }));
+      localStorage.setItem('iceland-kanban-v17', JSON.stringify({ memos, days, planLength }));
     }
     function uid() {
       return 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
@@ -861,8 +749,12 @@
       } else {
         const extraIdx = days.findIndex(d => d.id === 'd-extra');
         if (extraIdx >= 0) {
+          const fid = firstDayId();
           memos.forEach(m => {
-            if (m.dayId === 'd-extra') { m.dayId = 'pool'; m.period = 'pool'; }
+            if (m.dayId === 'd-extra') {
+              m.dayId = fid;
+              m.period = 'am';
+            }
           });
           days.splice(extraIdx, 1);
         }
@@ -916,25 +808,6 @@
         const ib = memos.findIndex(m => m.id === b.id);
         return ia - ib;
       });
-    }
-
-    /** Unassigned: 3 cards per column; cards 4–6 → 2nd column; 7–9 → 3rd, … */
-    function renderPool() {
-      const poolCards = document.getElementById('pool-cards');
-      if (!poolCards) return;
-      poolCards.innerHTML = '';
-    
-      const list = sortByIdSequence(memos.filter(m => m.dayId === 'pool'));
-      const PER_COL = 3;
-    
-      for (let i = 0; i < list.length; i += PER_COL) {
-        const col = document.createElement('div');
-        col.className = 'pool-col-group';
-        list.slice(i, i + PER_COL).forEach(m => {
-          col.appendChild(createMemoEl(m));
-        });
-        poolCards.appendChild(col);
-      }
     }
 
     function renderBoard() {
@@ -1008,7 +881,6 @@
         });
       });
 
-      renderPool();
       updateTitleAndToggle();
       requestAnimationFrame(updateHScrollSpacer);
     }
@@ -1085,23 +957,39 @@
       slot.classList.remove('drag-over');
       const id = e.dataTransfer.getData('text/plain') || draggedId;
       if (!id) return;
-      const dayId = slot.dataset.dayId;
-      const period = slot.dataset.period;
+      let dayId = slot.dataset.dayId;
+      let period = slot.dataset.period;
       const memo = memos.find(m => m.id === id);
       if (!memo) return;
+      if (dayId === 'pool' || period === 'pool') {
+        dayId = firstDayId();
+        period = 'am';
+      }
       memo.dayId = dayId;
-      memo.period = period === 'pool' ? 'pool' : period;
-      if (dayId === 'pool') memo.period = 'pool';
+      memo.period = period;
       saveState();
       renderBoard();
       showToast('Moved: ' + memo.title);
+    }
+
+    function fillDaySelect(selectedId) {
+      const sel = document.getElementById('f-day');
+      sel.innerHTML = '';
+      days.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d.id;
+        opt.textContent = 'Day ' + d.num + ' · ' + (d.label || d.title);
+        if (d.id === selectedId) opt.selected = true;
+        sel.appendChild(opt);
+      });
     }
 
     function openEditModal(id) {
       const m = memos.find(x => x.id === id);
       if (!m) return;
       editingId = id;
-      addTarget = { dayId: null, period: null };
+      isAddingNew = false;
+      addTarget = { dayId: m.dayId, period: m.period };
       document.getElementById('modal-title').textContent = 'Edit activity';
       document.getElementById('f-title').value = m.title;
       document.getElementById('f-note').value = m.note || '';
@@ -1109,13 +997,34 @@
       document.getElementById('f-end').value = m.end || '';
       document.getElementById('f-type').value = m.type;
       document.getElementById('f-period').value = (m.period === 'pm') ? 'pm' : 'am';
+      document.getElementById('f-day-wrap').style.display = 'none';
+      document.getElementById('modal').classList.add('show');
+      document.getElementById('f-title').focus();
+    }
+
+    /** Header "+ New" — choose day + section */
+    function openAddModalForNew() {
+      editingId = null;
+      isAddingNew = true;
+      const fid = firstDayId();
+      addTarget = { dayId: fid, period: 'am' };
+      document.getElementById('modal-title').textContent = 'Add activity';
+      document.getElementById('f-title').value = '';
+      document.getElementById('f-note').value = '';
+      document.getElementById('f-start').value = '';
+      document.getElementById('f-end').value = '';
+      document.getElementById('f-type').value = 'nature';
+      document.getElementById('f-period').value = 'am';
+      fillDaySelect(fid);
+      document.getElementById('f-day-wrap').style.display = 'block';
       document.getElementById('modal').classList.add('show');
       document.getElementById('f-title').focus();
     }
 
     function openAddModal(dayId, period) {
       editingId = null;
-      addTarget = { dayId, period: period || 'am' };
+      isAddingNew = true;
+      addTarget = { dayId: dayId || firstDayId(), period: period || 'am' };
       document.getElementById('modal-title').textContent = 'Add activity';
       document.getElementById('f-title').value = '';
       document.getElementById('f-note').value = '';
@@ -1123,6 +1032,8 @@
       document.getElementById('f-end').value = '';
       document.getElementById('f-type').value = 'nature';
       document.getElementById('f-period').value = period === 'pm' ? 'pm' : 'am';
+      fillDaySelect(addTarget.dayId);
+      document.getElementById('f-day-wrap').style.display = 'block';
       document.getElementById('modal').classList.add('show');
       document.getElementById('f-title').focus();
     }
@@ -1130,6 +1041,8 @@
     function closeModal() {
       document.getElementById('modal').classList.remove('show');
       editingId = null;
+      isAddingNew = false;
+      document.getElementById('f-day-wrap').style.display = 'none';
     }
 
     function saveMemo() {
@@ -1144,21 +1057,25 @@
       if (editingId) {
         const m = memos.find(x => x.id === editingId);
         if (m) {
-          m.title = title; m.note = note; m.type = type; m.start = start; m.end = end;
-          if (m.dayId !== 'pool') m.period = period;
+          m.title = title;
+          m.note = note;
+          m.type = type;
+          m.start = start;
+          m.end = end;
+          m.period = period;
         }
       } else {
-        const newMemo = {
-          id: uid(),
-          dayId: addTarget.dayId,
-          period: addTarget.period === 'pool' ? 'pool' : (period || addTarget.period),
-          title, note, type, start, end
-        };
-        if (addTarget.dayId === 'pool') {
-          newMemo.dayId = 'pool';
-          newMemo.period = 'pool';
+        let dayId = addTarget.dayId || firstDayId();
+        if (isAddingNew) {
+          const sel = document.getElementById('f-day');
+          if (sel && sel.value) dayId = sel.value;
         }
-        memos.push(newMemo);
+        memos.push({
+          id: uid(),
+          dayId,
+          period: period || 'am',
+          title, note, type, start, end
+        });
       }
       saveState();
       closeModal();
@@ -1210,14 +1127,6 @@
           });
         });
       });
-      const pool = sortByIdSequence(memos.filter(m => m.dayId === 'pool'));
-      lines.push('');
-      lines.push('📋 Unassigned');
-      if (pool.length) {
-        pool.forEach(m => lines.push(`  • ${m.title}${m.note ? ' — ' + m.note : ''}`));
-      } else {
-        lines.push('  (none)');
-      }
       lines.push('');
       lines.push('─'.repeat(28));
       return lines.join('\n');
@@ -1290,7 +1199,11 @@
         if (!line.trim() || /^[─\-═]+$/.test(line.trim())) continue;
         if (/Iceland\s+\d+-Day/i.test(line) || line.includes('🇮🇸')) continue;
 
-        if (/Unassigned/i.test(line)) { inUnassigned = true; currentDay = null; continue; }
+        if (/Unassigned/i.test(line)) {
+          inUnassigned = true;
+          currentDay = null;
+          continue;
+        }
         if (inUnassigned && /^\s*\(none\)\s*$/i.test(line)) continue;
 
         const dayMatch = line.match(/^Day\s+(\d+)\s*[·•.\-]\s*(.+)$/i);
@@ -1341,10 +1254,21 @@
           const { start, end, rest } = parseTimeBit(body);
           const title = rest.replace(/\s*[—–]\s*$/, '').trim();
           if (!title) continue;
+
+          let dayId = firstDayId();
+          let period = 'pm';
+          if (inUnassigned) {
+            dayId = newDays[0] ? newDays[0].id : 'd1';
+            period = 'pm';
+          } else if (currentDay) {
+            dayId = currentDay.id;
+            period = currentPeriod;
+          }
+
           newMemos.push({
             id: uid(),
-            dayId: inUnassigned ? 'pool' : (currentDay ? currentDay.id : 'pool'),
-            period: inUnassigned ? 'pool' : currentPeriod,
+            dayId,
+            period,
             title, note, type: guessType(title), start, end
           });
         }
@@ -1377,6 +1301,7 @@
         memos = parsed.memos;
         planLength = days.length >= 8 ? 8 : 7;
         ensureSouthCoastPairOrder();
+        migratePoolToBoard();
         syncDayTitles();
         saveState();
         closeImportModal();
@@ -1394,9 +1319,7 @@
       const wrap = document.getElementById('board-wrap');
       const track = document.getElementById('board-hscroll-track');
       if (!board || !spacer || !wrap || !track) return;
-      const boardW = board.scrollWidth;
-      const viewW = wrap.clientWidth;
-      spacer.style.width = Math.max(boardW, viewW + 1) + 'px';
+      spacer.style.width = Math.max(board.scrollWidth, wrap.clientWidth + 1) + 'px';
       if (!syncingScroll) {
         syncingScroll = true;
         track.scrollLeft = wrap.scrollLeft;
@@ -1499,10 +1422,6 @@
         });
       }
     }
-
-    document.getElementById('pool-slot').addEventListener('dragover', onDragOver);
-    document.getElementById('pool-slot').addEventListener('dragleave', onDragLeave);
-    document.getElementById('pool-slot').addEventListener('drop', onDrop);
 
     loadState();
     renderBoard();
