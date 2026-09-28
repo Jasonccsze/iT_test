@@ -102,20 +102,20 @@
       background: rgba(56,189,248,0.12);
       border-color: var(--accent);
     }
+
+    /* Unassigned: columns of 3, scroll horizontally (≈3×3 visible) */
     .pool-cards-row {
       display: flex;
       flex-direction: row;
       flex-wrap: nowrap;
       align-items: flex-start;
       gap: 0.35rem;
-      max-height: calc(3 * 2.6rem + 2 * 0.3rem); /* ~3 rows */
+      max-height: calc(3 * 2.55rem + 2 * 0.3rem);
       overflow-x: auto;
       overflow-y: hidden;
       -webkit-overflow-scrolling: touch;
       padding-bottom: 2px;
     }
-    
-    /* each “page” = one column of up to 3 cards */
     .pool-col-group {
       display: flex;
       flex-direction: column;
@@ -123,7 +123,6 @@
       flex-shrink: 0;
       width: 120px;
     }
-    
     .pool-cards-row .memo {
       width: 120px;
       min-width: 120px;
@@ -131,18 +130,14 @@
       flex-shrink: 0;
       padding: 0.25rem 0.4rem;
       border-left-width: 3px;
-      box-sizing: border-box;
     }
-    
     .pool-cards-row .memo .memo-title {
       font-size: 0.7rem;
       line-height: 1.25;
       margin-bottom: 0;
     }
-    
     .pool-cards-row .memo .memo-note,
     .pool-cards-row .memo .memo-tags { display: none; }
-    
     .pool-cards-row .memo .memo-time {
       font-size: 0.58rem;
       margin-bottom: 0.05rem;
@@ -150,7 +145,7 @@
     .pool-cards-row .memo .memo-actions { top: 0.1rem; right: 0.15rem; }
     .pool-cards-row .memo .memo-btn { width: 14px; height: 14px; font-size: 0.6rem; }
 
-    /* 50px tall horizontal scrollbar under Unassigned */
+    /* 50px bar under Unassigned — thumb fills track */
     .board-hscroll {
       height: 50px;
       background: var(--surface);
@@ -174,31 +169,34 @@
       overflow-x: auto;
       overflow-y: hidden;
       -webkit-overflow-scrolling: touch;
-      scrollbar-width: auto;
-      scrollbar-color: var(--accent) var(--surface-2);
       border-radius: 8px;
       background: var(--surface-2);
       border: 1px solid var(--border);
+      /* Firefox: full-height thumb */
+      scrollbar-width: auto;
+      scrollbar-color: var(--accent) var(--surface-2);
     }
+    /* WebKit: scrollbar height = track content box so thumb fits track */
     .board-hscroll-track::-webkit-scrollbar {
-      height: 28px;
+      height: 36px;
     }
     .board-hscroll-track::-webkit-scrollbar-track {
       background: var(--surface-2);
-      border-radius: 8px;
+      border-radius: 7px;
     }
     .board-hscroll-track::-webkit-scrollbar-thumb {
       background: linear-gradient(90deg, #0ea5e9, var(--accent));
-      border-radius: 8px;
-      border: 4px solid var(--surface-2);
-      min-width: 64px;
+      border-radius: 7px;
+      /* no inset border — thumb fills track height */
+      border: none;
+      min-width: 48px;
     }
     .board-hscroll-track::-webkit-scrollbar-thumb:hover {
       background: #7dd3fc;
     }
     .board-hscroll-spacer {
       height: 1px;
-      /* width set in JS to match board scrollWidth */
+      pointer-events: none;
     }
 
     .board-wrap {
@@ -215,9 +213,7 @@
       height: 10px;
       width: 10px;
     }
-    .board-wrap::-webkit-scrollbar-track {
-      background: var(--surface-2);
-    }
+    .board-wrap::-webkit-scrollbar-track { background: var(--surface-2); }
     .board-wrap::-webkit-scrollbar-thumb {
       background: var(--accent);
       border-radius: 6px;
@@ -287,10 +283,7 @@
       color: #0b1220;
       border-color: var(--accent);
     }
-    .day-move-btn:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-    }
+    .day-move-btn:disabled { opacity: 0.35; cursor: not-allowed; }
     .day-num {
       background: var(--accent);
       color: #0b1220;
@@ -315,17 +308,12 @@
       padding: 0 0.15rem;
       cursor: text;
     }
-    .day-title-edit:hover, .day-sub-edit:hover {
-      background: rgba(56,189,248,0.1);
-    }
+    .day-title-edit:hover, .day-sub-edit:hover { background: rgba(56,189,248,0.1); }
     .day-title-edit:focus, .day-sub-edit:focus {
       background: rgba(56,189,248,0.18);
       box-shadow: 0 0 0 1px var(--accent);
     }
-    h2 .day-title-edit {
-      font-size: inherit;
-      font-weight: inherit;
-    }
+    h2 .day-title-edit { font-size: inherit; font-weight: inherit; }
 
     .slots {
       flex: 1;
@@ -335,7 +323,6 @@
       flex-direction: column;
       gap: 0.45rem;
     }
-
     .slot {
       background: var(--surface-2);
       border: 1px dashed var(--border);
@@ -588,7 +575,6 @@
     </div>
   </div>
 
-  <!-- 50px horizontal scrollbar synced with board -->
   <div class="board-hscroll" id="board-hscroll">
     <span class="board-hscroll-label">Scroll</span>
     <div class="board-hscroll-track" id="board-hscroll-track">
@@ -677,8 +663,7 @@
       { id: 'pm', label: 'PM · Afternoon / Evening' },
     ];
 
-    /* Trip starts 21 Nov. Day N → 20+N November. */
-    const TRIP_START = { y: 2025, m: 10, d: 21 }; // month 0-indexed: 10 = Nov
+    const TRIP_START = { y: 2025, m: 10, d: 21 };
 
     const DAYS_7 = [
       { id: 'd1', num: 1, label: 'Arrival', sub: 'Reykjavík' },
@@ -697,7 +682,6 @@
       sub: 'Free / flexible'
     };
 
-    /* South Coast pair — always move together, D1 before D2 */
     const SC_PAIR = ['d2', 'd3'];
 
     const DEFAULT_MEMOS = [
@@ -758,18 +742,15 @@
     let syncingScroll = false;
 
     function dateForDayNum(num) {
-      // Day 1 = 21 Nov, Day 2 = 22 Nov, … Day 8 = 28 Nov
       const dt = new Date(TRIP_START.y, TRIP_START.m, TRIP_START.d + (num - 1));
       const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
       return dt.getDate() + ' ' + months[dt.getMonth()];
     }
 
-    /** Keep title = "DD Mon · label" tied to day number */
     function syncDayTitles() {
       days.forEach((d, i) => {
         d.num = i + 1;
         const dateStr = dateForDayNum(d.num);
-        // Preserve thematic label (Arrival, South Coast D1, …)
         const label = d.label || stripDateFromTitle(d.title) || 'Day';
         d.label = label;
         d.title = dateStr + ' · ' + label;
@@ -778,23 +759,20 @@
 
     function stripDateFromTitle(title) {
       if (!title) return '';
-      // "21 Nov · Arrival" → "Arrival"
       const m = title.match(/^\d{1,2}\s+[A-Za-z]{3}\s*[·•.\-]\s*(.+)$/);
       return m ? m[1].trim() : title;
     }
 
     function loadState() {
       try {
-        const saved = localStorage.getItem('iceland-kanban-v14');
+        const saved = localStorage.getItem('iceland-kanban-v15');
         if (saved) {
           const data = JSON.parse(saved);
           memos = data.memos || data;
           planLength = data.planLength === 8 ? 8 : 7;
           if (data.days) {
             days = data.days;
-            days.forEach(d => {
-              if (!d.label) d.label = stripDateFromTitle(d.title);
-            });
+            days.forEach(d => { if (!d.label) d.label = stripDateFromTitle(d.title); });
           } else {
             days = buildDaysFromLength(planLength);
           }
@@ -809,7 +787,7 @@
       syncDayTitles();
     }
     function saveState() {
-      localStorage.setItem('iceland-kanban-v14', JSON.stringify({ memos, days, planLength }));
+      localStorage.setItem('iceland-kanban-v15', JSON.stringify({ memos, days, planLength }));
     }
     function uid() {
       return 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
@@ -819,8 +797,7 @@
       const base = JSON.parse(JSON.stringify(DAYS_7));
       if (len === 8) {
         const dep = base.pop();
-        const extra = JSON.parse(JSON.stringify(EXTRA_DAY));
-        base.push(extra);
+        base.push(JSON.parse(JSON.stringify(EXTRA_DAY)));
         base.push(dep);
       }
       ensureSouthCoastPairOrder(base);
@@ -831,17 +808,14 @@
       return base;
     }
 
-    /** Ensure d2 (SC D1) is immediately before d3 (SC D2) */
     function ensureSouthCoastPairOrder(list) {
       const arr = list || days;
       const i1 = arr.findIndex(d => d.id === 'd2');
       const i2 = arr.findIndex(d => d.id === 'd3');
       if (i1 < 0 || i2 < 0) return;
-      if (i2 === i1 + 1) return; // already consecutive D1 then D2
-      // Pull pair out and reinsert with D1 first
+      if (i2 === i1 + 1) return;
       const a = arr[i1];
       const b = arr[i2];
-      // remove higher index first
       if (i2 > i1) {
         arr.splice(i2, 1);
         arr.splice(i1, 1);
@@ -871,18 +845,14 @@
         const depIdx = days.findIndex(d => d.id === 'd7' || /departure/i.test(d.label || d.title));
         const insertAt = depIdx >= 0 ? depIdx : days.length - 1;
         if (!days.some(d => d.id === 'd-extra')) {
-          const extra = JSON.parse(JSON.stringify(EXTRA_DAY));
-          days.splice(insertAt, 0, extra);
+          days.splice(insertAt, 0, JSON.parse(JSON.stringify(EXTRA_DAY)));
         }
         planLength = 8;
       } else {
         const extraIdx = days.findIndex(d => d.id === 'd-extra');
         if (extraIdx >= 0) {
           memos.forEach(m => {
-            if (m.dayId === 'd-extra') {
-              m.dayId = 'pool';
-              m.period = 'pool';
-            }
+            if (m.dayId === 'd-extra') { m.dayId = 'pool'; m.period = 'pool'; }
           });
           days.splice(extraIdx, 1);
         }
@@ -942,16 +912,12 @@
       const poolCards = document.getElementById('pool-cards');
       if (!poolCards) return;
       poolCards.innerHTML = '';
-    
       const list = sortByIdSequence(memos.filter(m => m.dayId === 'pool'));
       const PER_COL = 3;
-    
       for (let i = 0; i < list.length; i += PER_COL) {
         const col = document.createElement('div');
         col.className = 'pool-col-group';
-        list.slice(i, i + PER_COL).forEach(m => {
-          col.appendChild(createMemoEl(m));
-        });
+        list.slice(i, i + PER_COL).forEach(m => col.appendChild(createMemoEl(m)));
         poolCards.appendChild(col);
       }
     }
@@ -990,7 +956,6 @@
             const d = days.find(x => x.id === id);
             if (!d) return;
             if (field === 'label') {
-              // User may edit full "21 Nov · Arrival" or just label — store label only; date reapplied
               const raw = el.textContent.trim();
               d.label = stripDateFromTitle(raw) || raw;
               syncDayTitles();
@@ -1022,10 +987,9 @@
           slotsEl.appendChild(slotDiv);
 
           const cardsEl = slotDiv.querySelector('.slot-cards');
-          const list = sortByIdSequence(
+          sortByIdSequence(
             memos.filter(m => m.dayId === day.id && m.period === period.id)
-          );
-          list.forEach(m => cardsEl.appendChild(createMemoEl(m)));
+          ).forEach(m => cardsEl.appendChild(createMemoEl(m)));
         });
       });
 
@@ -1034,15 +998,11 @@
       requestAnimationFrame(updateHScrollSpacer);
     }
 
-    /**
-     * Move day; South Coast D1+D2 always move as one block (D1 then D2).
-     */
     function moveDay(dayId, direction) {
       ensureSouthCoastPairOrder();
       const isSC = SC_PAIR.includes(dayId);
 
       if (isSC) {
-        // Move the whole pair as a unit
         let i1 = days.findIndex(d => d.id === 'd2');
         let i2 = days.findIndex(d => d.id === 'd3');
         if (i1 < 0 || i2 < 0) return;
@@ -1053,7 +1013,6 @@
         }
         const pair = days.splice(i1, 2);
         let newStart = i1 + direction;
-        // Clamp so pair fits
         if (newStart < 0) newStart = 0;
         if (newStart > days.length) newStart = days.length;
         days.splice(newStart, 0, pair[0], pair[1]);
@@ -1062,27 +1021,12 @@
         if (idx < 0) return;
         const newIdx = idx + direction;
         if (newIdx < 0 || newIdx >= days.length) return;
-
-        // Don't split SC pair: if swapping into the middle of the pair, move past the pair
         const other = days[newIdx];
         if (other && SC_PAIR.includes(other.id)) {
-          // Jump over the pair
           const i1 = days.findIndex(d => d.id === 'd2');
-          const target = direction > 0 ? i1 + 2 : i1 - 1;
-          if (target < 0 || target >= days.length) {
-            // can't move
-            ensureSouthCoastPairOrder();
-            syncDayTitles();
-            return;
-          }
           const [item] = days.splice(idx, 1);
-          // recompute insert after removal
           let insertAt = days.findIndex(d => d.id === 'd2');
           if (direction > 0) insertAt = insertAt + 2;
-          // if we removed item before pair, indices shifted
-          if (idx < i1 && direction > 0) {
-            // already handled by splice
-          }
           days.splice(Math.max(0, Math.min(days.length, insertAt)), 0, item);
         } else {
           const tmp = days[idx];
@@ -1182,11 +1126,7 @@
       if (editingId) {
         const m = memos.find(x => x.id === editingId);
         if (m) {
-          m.title = title;
-          m.note = note;
-          m.type = type;
-          m.start = start;
-          m.end = end;
+          m.title = title; m.note = note; m.type = type; m.start = start; m.end = end;
           if (m.dayId !== 'pool') m.period = period;
         }
       } else {
@@ -1238,16 +1178,12 @@
       const lines = [];
       lines.push(planLength === 8 ? '🇮🇸 Iceland 8-Day Plan' : '🇮🇸 Iceland 7-Day Plan');
       lines.push('─'.repeat(28));
-
       days.forEach(day => {
         lines.push('');
         lines.push(`Day ${day.num} · ${day.title}`);
         if (day.sub) lines.push(`  (${day.sub})`);
-
         PERIODS.forEach(period => {
-          const list = sortByIdSequence(
-            memos.filter(m => m.dayId === day.id && m.period === period.id)
-          );
+          const list = sortByIdSequence(memos.filter(m => m.dayId === day.id && m.period === period.id));
           if (!list.length) return;
           lines.push(`  ${period.id.toUpperCase()}`);
           list.forEach(m => {
@@ -1258,7 +1194,6 @@
           });
         });
       });
-
       const pool = sortByIdSequence(memos.filter(m => m.dayId === 'pool'));
       lines.push('');
       lines.push('📋 Unassigned');
@@ -1270,7 +1205,6 @@
       } else {
         lines.push('  (none)');
       }
-
       lines.push('');
       lines.push('─'.repeat(28));
       return lines.join('\n');
@@ -1290,12 +1224,8 @@
         showToast('Copied to clipboard');
       } catch (e) {
         document.getElementById('summary-text').select();
-        try {
-          document.execCommand('copy');
-          showToast('Copied to clipboard');
-        } catch (e2) {
-          showToast('Select text and copy manually');
-        }
+        try { document.execCommand('copy'); showToast('Copied to clipboard'); }
+        catch (e2) { showToast('Select text and copy manually'); }
       }
     }
 
@@ -1314,25 +1244,22 @@
       if (!m) return { start, end, rest: s };
       const inner = m[1].trim();
       const range = inner.match(/^(\d{1,2}:\d{2})\s*[–\-]\s*(\d{1,2}:\d{2})$/);
-      if (range) {
-        start = range[1];
-        end = range[2];
-      } else {
+      if (range) { start = range[1]; end = range[2]; }
+      else {
         const from = inner.match(/^from\s+(\d{1,2}:\d{2})$/i);
         const until = inner.match(/^until\s+(\d{1,2}:\d{2})$/i);
         if (from) start = from[1];
         if (until) end = until[1];
       }
-      const rest = s.replace(m[0], '').trim();
-      return { start, end, rest };
+      return { start, end, rest: s.replace(m[0], '').trim() };
     }
 
     function guessType(title) {
       const t = title.toLowerCase();
       if (/land|transfer|flybus|departure|return|airport|kef|drive|pickup|drop/.test(t)) return 'drive';
       if (/lunch|dinner|breakfast|food|mokka|cafe|kaffi|roasters/.test(t)) return 'food';
-      if (/museum|church|hallgr|harpa|walk|city|cinema|tó nar|12 tónar|paradís|phallolog/.test(t)) return 'culture';
-      if (/hotel|free|recovery|bookstore|zimsen|vesturb|roasters/.test(t)) return 'relax';
+      if (/museum|church|hallgr|harpa|walk|city|cinema|12 tónar|paradís|phallolog/.test(t)) return 'culture';
+      if (/hotel|free|recovery|bookstore|zimsen|vesturb/.test(t)) return 'relax';
       if (/★|waterfall|glacier|beach|cave|golden|northern|coast|lagoon|diamond|geysir|gullfoss/.test(t)) return 'nature';
       return 'culture';
     }
@@ -1350,11 +1277,7 @@
         if (!line.trim() || /^[─\-═]+$/.test(line.trim())) continue;
         if (/Iceland\s+\d+-Day/i.test(line) || line.includes('🇮🇸')) continue;
 
-        if (/Unassigned/i.test(line)) {
-          inUnassigned = true;
-          currentDay = null;
-          continue;
-        }
+        if (/Unassigned/i.test(line)) { inUnassigned = true; currentDay = null; continue; }
         if (inUnassigned && /^\s*\(none\)\s*$/i.test(line)) continue;
 
         const dayMatch = line.match(/^Day\s+(\d+)\s*[·•.\-]\s*(.+)$/i);
@@ -1403,15 +1326,13 @@
             }
           }
           const { start, end, rest } = parseTimeBit(body);
-          let title = rest.replace(/\s*[—–]\s*$/, '').trim();
+          const title = rest.replace(/\s*[—–]\s*$/, '').trim();
           if (!title) continue;
           newMemos.push({
             id: uid(),
             dayId: inUnassigned ? 'pool' : (currentDay ? currentDay.id : 'pool'),
             period: inUnassigned ? 'pool' : currentPeriod,
-            title, note,
-            type: guessType(title),
-            start, end
+            title, note, type: guessType(title), start, end
           });
         }
       }
@@ -1430,7 +1351,6 @@
         d.num = i + 1;
         d.title = dateForDayNum(d.num) + ' · ' + (d.label || stripDateFromTitle(d.title));
       });
-
       return { days: newDays, memos: newMemos };
     }
 
@@ -1455,14 +1375,23 @@
       }
     }
 
-    /* —— Horizontal scrollbar sync —— */
+    /** Spacer width = board scrollWidth so thumb size matches visible fraction */
     function updateHScrollSpacer() {
       const board = document.getElementById('board');
       const spacer = document.getElementById('board-hscroll-spacer');
       const wrap = document.getElementById('board-wrap');
-      if (!board || !spacer || !wrap) return;
-      const w = Math.max(board.scrollWidth, wrap.clientWidth + 1);
-      spacer.style.width = w + 'px';
+      const track = document.getElementById('board-hscroll-track');
+      if (!board || !spacer || !wrap || !track) return;
+      const boardW = board.scrollWidth;
+      const viewW = wrap.clientWidth;
+      // Spacer must be large enough that (view/total) ≈ thumb/track
+      spacer.style.width = Math.max(boardW, viewW + 1) + 'px';
+      // Keep scroll positions aligned after resize
+      if (!syncingScroll) {
+        syncingScroll = true;
+        track.scrollLeft = wrap.scrollLeft;
+        syncingScroll = false;
+      }
     }
 
     function bindScrollSync() {
@@ -1505,28 +1434,15 @@
       const board = document.getElementById('board');
       const wrap = document.getElementById('board-wrap');
       const cols = Array.from(board.querySelectorAll('.day-col'));
-
       const prev = {
-        wrapH: wrap.style.height,
-        wrapO: wrap.style.overflow,
-        boardDisplay: board.style.display,
-        boardFlexDir: board.style.flexDirection,
-        boardFlexWrap: board.style.flexWrap,
-        boardMinW: board.style.minWidth,
-        boardW: board.style.width,
-        boardGap: board.style.gap,
-        colStyles: cols.map(c => ({
-          w: c.style.width,
-          maxW: c.style.maxWidth,
-          flex: c.style.flex
-        }))
+        wrapH: wrap.style.height, wrapO: wrap.style.overflow,
+        boardDisplay: board.style.display, boardFlexDir: board.style.flexDirection,
+        boardFlexWrap: board.style.flexWrap, boardMinW: board.style.minWidth,
+        boardW: board.style.width, boardGap: board.style.gap,
+        colStyles: cols.map(c => ({ w: c.style.width, maxW: c.style.maxWidth, flex: c.style.flex }))
       };
-
-      const COL_W = 240;
-      const GAP = 10;
-      const COLS_PER_ROW = 3;
+      const COL_W = 240, GAP = 10, COLS_PER_ROW = 3;
       const boardW = COLS_PER_ROW * COL_W + (COLS_PER_ROW - 1) * GAP;
-
       wrap.style.height = 'auto';
       wrap.style.overflow = 'visible';
       board.style.display = 'flex';
@@ -1542,16 +1458,10 @@
       });
       void board.offsetHeight;
       board.style.minHeight = board.scrollHeight + 'px';
-
       try {
         const canvas = await html2canvas(board, {
-          backgroundColor: '#0b1220',
-          scale: 2,
-          useCORS: true,
-          logging: false,
-          width: boardW,
-          windowWidth: boardW,
-          windowHeight: board.scrollHeight
+          backgroundColor: '#0b1220', scale: 2, useCORS: true, logging: false,
+          width: boardW, windowWidth: boardW, windowHeight: board.scrollHeight
         });
         const a = document.createElement('a');
         a.download = 'iceland-plan-timetable.png';
