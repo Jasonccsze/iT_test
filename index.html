@@ -113,24 +113,26 @@
     */
     .pool-cards-row {
       display: flex;
-      flex-direction: row;
+      flex-direction: row;       /* columns side by side */
       flex-wrap: nowrap;
       align-items: flex-start;
       gap: 0.4rem;
       width: 100%;
-      overflow-x: auto;
+      overflow-x: auto;          /* more columns → scroll sideways */
       overflow-y: hidden;
       -webkit-overflow-scrolling: touch;
       padding-bottom: 4px;
       min-height: calc(3 * 2.35rem + 2 * 0.3rem);
     }
+    
     .pool-col-group {
       display: flex;
-      flex-direction: column;
+      flex-direction: column;    /* 3 cards stacked in the column */
       gap: 0.3rem;
       flex: 0 0 auto;
       width: 130px;
     }
+    
     .pool-cards-row .memo {
       width: 130px;
       min-width: 130px;
@@ -142,6 +144,7 @@
       border-left-width: 3px;
       overflow: hidden;
     }
+    
     .pool-cards-row .memo .memo-title {
       font-size: 0.7rem;
       line-height: 1.25;
@@ -150,11 +153,12 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+    
     .pool-cards-row .memo .memo-note,
     .pool-cards-row .memo .memo-tags,
-    .pool-cards-row .memo .memo-time { display: none; }
-    .pool-cards-row .memo .memo-actions { top: 0.1rem; right: 0.15rem; }
-    .pool-cards-row .memo .memo-btn { width: 14px; height: 14px; font-size: 0.6rem; }
+    .pool-cards-row .memo .memo-time {
+      display: none;
+    }
 
     /* Thin horizontal scrollbar under Unassigned (synced with board) */
     .board-hscroll {
@@ -914,22 +918,21 @@
       });
     }
 
-    /** 3 cards per column; extra cards → new columns to the right */
+    /** Unassigned: 3 cards per column; cards 4–6 → 2nd column; 7–9 → 3rd, … */
     function renderPool() {
       const poolCards = document.getElementById('pool-cards');
       if (!poolCards) return;
       poolCards.innerHTML = '';
-
+    
       const list = sortByIdSequence(memos.filter(m => m.dayId === 'pool'));
       const PER_COL = 3;
-
-      if (!list.length) return;
-
+    
       for (let i = 0; i < list.length; i += PER_COL) {
         const col = document.createElement('div');
         col.className = 'pool-col-group';
-        const chunk = list.slice(i, i + PER_COL);
-        chunk.forEach(m => col.appendChild(createMemoEl(m)));
+        list.slice(i, i + PER_COL).forEach(m => {
+          col.appendChild(createMemoEl(m));
+        });
         poolCards.appendChild(col);
       }
     }
