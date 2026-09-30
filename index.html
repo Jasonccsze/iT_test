@@ -663,6 +663,95 @@
     const MAX_DAYS = 30;
     const STORAGE_KEY = 'trip-kanban-v1';
 
+    const DEFAULT_SUMMARY = `Iceland 8-Day Plan
+Dates: 2026-11-21 → 2026-11-28
+Bound: Day 2+Day 3
+────────────────────────────
+
+Day 1 · 21 Nov · Arrival
+  (Reykjavík)
+  AM
+  • Land KEF 10:50 [10:50 – 12:25] — Clearance ~40 min + Flybus ~50 min
+  PM
+  • Check-in + lunch [from 13:00]
+  • Nordic House
+  • Kaffihús Vesturbæjar — Cafe - Melhagi 20, 107 Reykjavík
+  • How to become Icelandic in 60 min [19:00 – 20:00] — Harpa · Kaldalón
+  • Dinner
+
+Day 2 · 22 Nov · South Coast D1
+  (Skaftafell area)
+  AM
+  • ★ 2-Day South Coast + Ice Cave [from 09:00] — 2-day · Pickup 09:00 · South coast day
+  • ★ Waterfalls — Seljalandsfoss · Skógafoss
+  PM
+  • ★ Black Sand Beach — Reynisfjara
+  • ★ Hotel Skaftafell area — Overnight + optional NL
+
+Day 3 · 23 Nov · South Coast D2
+  (Return Reykjavík)
+  AM
+  • ★ 2-Day tour continues — Ice cave + lagoon day
+  • ★ Glacier Lagoon — Jökulsárlón
+  • ★ Diamond Beach
+  PM
+  • ★ Ice Cave
+  • ★ Return Reykjavík [until 21:00] — Drop-off ~21:00
+
+Day 4 · 24 Nov · City
+  (Reykjavík)
+  AM
+  • Free morning
+  • Reykjavik Roasters — Cafe - Kárastígur 1, 101 Reykjavík
+  • The Icelandic Phallological Museum
+  PM
+  • Lunch
+  • Iða Zimsen — Bookstore / hangout
+  • Dinner
+  • 12 Tónar — Record shop · Skólavörðustígur
+
+Day 5 · 25 Nov · Golden Coast
+  (Reykjavík + Golden Coast)
+  AM
+  • Breakfast · Mokka Kaffi — Cafe - Skólavörðustígur 3A, 101 Reykjavík
+  PM
+  • ★ Golden Circle Aurora Surprise [from 12:00] — Half-day · Pickup 12:00
+  • ★ GC continues — Geysir · Gullfoss · Kerið
+  • ★ Dinner — Drop-off Reykjavík
+  • ★ Northern Lights hunt [20:30 – 00:00] — Pickup ~20:30 · return ~00:00
+
+Day 6 · 26 Nov · City
+  (Reykjavík)
+  AM
+  • Recovery morning
+  PM
+  • Lunch
+  • Bíó Paradís — Cinema · Hverfisgata
+  • Dinner
+
+Day 7 · 27 Nov · City
+  (Reykjavík)
+  AM
+  • Free morning
+  • National Museum of Iceland
+  PM
+  • Lunch
+  • Cafe / Bookstore
+  • Dinner
+
+Day 8 · 28 Nov · Departure 11:55
+  (Airport by 09:55)
+  AM
+  • Breakfast + pack [until 09:05] — Leave ~09:05
+  • Transfer to KEF [09:05 – 09:55] — 2h before flight
+  • Departure 11:55 [from 11:55]
+
+📋 Pool
+  • Kaffivagninn — Lunch/Dinner - Grandagarður 10, 101 Reykjavík
+  • Snaps Bistro — Lunch/Dinner - Þórsgata 1, 101 Reykjavík
+
+────────────────────────────`;
+
     let memos = [];
     let bindings = [];
     let editingId = null;
@@ -922,14 +1011,29 @@
     }
 
     function buildEmptyState() {
-      days = [createDefaultDay(1)];
-      memos = [];
-      bindings = [];
-      planTitle = 'Trip Plan';
-      startDate = null;
-      endDate = null;
-      seedDayMemos(days[0].id);
-      syncDayTitles();
+      try {
+        const parsed = parseSummary(DEFAULT_SUMMARY);
+        days = parsed.days;
+        memos = parsed.memos;
+        bindings = parsed.bindings || [];
+        planTitle = parsed.planTitle || 'Iceland 8-Day Plan';
+        startDate = parsed.startDate || null;
+        endDate = parsed.endDate || null;
+        if (startDate && !endDate) recomputeEndFromStart();
+        else if (endDate && !startDate) recomputeStartFromEnd();
+        ensureAllBindings();
+        syncDayTitles();
+      } catch (e) {
+        console.error('Default plan parse failed', e);
+        days = [createDefaultDay(1)];
+        memos = [];
+        bindings = [];
+        planTitle = 'Trip Plan';
+        startDate = null;
+        endDate = null;
+        seedDayMemos(days[0].id);
+        syncDayTitles();
+      }
     }
 
     function loadState() {
@@ -1516,13 +1620,13 @@
     }
 
     function resetBoard() {
-      if (!confirm('Reset to an empty 1-day plan? Your changes will be lost.')) return;
+      if (!confirm('Reset to the default Iceland 8-day plan? Your changes will be lost.')) return;
       buildEmptyState();
-      document.getElementById('date-start').value = '';
-      document.getElementById('date-end').value = '';
+      document.getElementById('date-start').value = startDate || '';
+      document.getElementById('date-end').value = endDate || '';
       saveState();
       renderBoard();
-      showToast('Reset to empty plan');
+      showToast('Reset to default Iceland plan');
     }
 
     function buildSummaryText() {
