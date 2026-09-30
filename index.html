@@ -395,6 +395,7 @@
       font-weight: 600;
       line-height: 1.3;
       margin-bottom: 0.08rem;
+      padding-right: 4.2rem;
     }
     .memo-note {
       font-size: 0.68rem;
@@ -421,6 +422,9 @@
       right: 0.25rem;
       display: none;
       gap: 0.12rem;
+      flex-wrap: wrap;
+      max-width: 76px;
+      justify-content: flex-end;
     }
     .memo:hover .memo-actions { display: flex; }
     .memo-btn {
@@ -657,68 +661,7 @@
     ];
 
     const MAX_DAYS = 30;
-    const STORAGE_KEY = 'trip-kanban-v2';
-
-    const DEFAULT_DAYS = [
-      { id: 'd1', num: 1, label: 'Arrival', sub: 'Reykjavík' },
-      { id: 'd2', num: 2, label: 'South Coast D1', sub: 'Skaftafell area' },
-      { id: 'd3', num: 3, label: 'South Coast D2', sub: 'Return Reykjavík' },
-      { id: 'd4', num: 4, label: 'City', sub: 'Reykjavík' },
-      { id: 'd5', num: 5, label: 'Golden Coast', sub: 'Reykjavík' },
-      { id: 'd6', num: 6, label: 'City', sub: 'Reykjavík' },
-      { id: 'd7', num: 7, label: 'Departure 11:55', sub: 'Airport by 09:55' },
-    ];
-
-    const DEFAULT_BINDINGS = [{ a: 'd2', b: 'd3' }];
-
-    const DEFAULT_MEMOS = [
-      { id: 'm1', dayId: 'd1', period: 'am', title: 'Land KEF 10:50', note: 'Clearance ~40 min + Flybus ~50 min', type: 'drive', start: '10:50', end: '12:25' },
-      { id: 'm2', dayId: 'd1', period: 'pm', title: 'Check-in + lunch', note: '', type: 'food', start: '13:00', end: '' },
-      { id: 'm4', dayId: 'd1', period: 'pm', title: 'National Museum of Iceland', note: '', type: 'culture', start: '', end: '' },
-      { id: 'm5', dayId: 'd1', period: 'pm', title: 'Kaffihús Vesturbæjar', note: 'Melhagi 20, 107 Reykjavík', type: 'relax', start: '', end: '' },
-      { id: 'm6', dayId: 'd1', period: 'pm', title: 'How to become Icelandic in 60 min', note: 'Harpa · Kaldalón', type: 'culture', start: '19:00', end: '20:00' },
-      { id: 'm7', dayId: 'd1', period: 'pm', title: 'Dinner', note: '', type: 'food', start: '', end: '' },
-
-      { id: 'tour-sc1', dayId: 'd2', period: 'am', title: '★ 2-Day South Coast + Ice Cave', note: '2-day · Pickup 09:00 · South coast day', type: 'nature', start: '09:00', end: '' },
-      { id: 'tour-sc1b', dayId: 'd2', period: 'am', title: '★ Waterfalls', note: 'Seljalandsfoss · Skógafoss', type: 'nature', start: '', end: '' },
-      { id: 'tour-sc1c', dayId: 'd2', period: 'pm', title: '★ Black Sand Beach', note: 'Reynisfjara', type: 'nature', start: '', end: '' },
-      { id: 'tour-sc1d', dayId: 'd2', period: 'pm', title: '★ Hotel Skaftafell area', note: 'Overnight + optional NL', type: 'relax', start: '', end: '' },
-
-      { id: 'tour-sc2', dayId: 'd3', period: 'am', title: '★ 2-Day tour continues', note: 'Ice cave + lagoon day', type: 'nature', start: '', end: '' },
-      { id: 'tour-sc2b', dayId: 'd3', period: 'am', title: '★ Glacier Lagoon', note: 'Jökulsárlón', type: 'nature', start: '', end: '' },
-      { id: 'tour-sc2c', dayId: 'd3', period: 'am', title: '★ Diamond Beach', note: '', type: 'nature', start: '', end: '' },
-      { id: 'tour-sc2d', dayId: 'd3', period: 'pm', title: '★ Ice Cave', note: '', type: 'nature', start: '', end: '' },
-      { id: 'tour-sc2e', dayId: 'd3', period: 'pm', title: '★ Return Reykjavík', note: 'Drop-off ~21:00', type: 'drive', start: '', end: '21:00' },
-
-      { id: 'm29', dayId: 'd4', period: 'am', title: 'Recovery morning', note: '', type: 'relax', start: '', end: '' },
-      { id: 'm30', dayId: 'd4', period: 'am', title: 'Reykjavik Roasters', note: 'Kárastígur 1, 101 Reykjavík', type: 'relax', start: '', end: '' },
-      { id: 'm31', dayId: 'd4', period: 'pm', title: 'Lunch', note: '', type: 'food', start: '', end: '' },
-      { id: 'm32', dayId: 'd4', period: 'pm', title: 'Free afternoon', note: '', type: 'relax', start: '', end: '' },
-      { id: 'm34', dayId: 'd4', period: 'pm', title: 'The Icelandic Phallological Museum', note: '', type: 'culture', start: '', end: '' },
-      { id: 'm35', dayId: 'd4', period: 'pm', title: 'Dinner', note: '', type: 'food', start: '', end: '' },
-
-      { id: 'm-mokka', dayId: 'd5', period: 'am', title: 'Breakfast · Mokka Kaffi', note: 'Skólavörðustígur', type: 'food', start: '', end: '' },
-      { id: 'm-free', dayId: 'd5', period: 'am', title: 'Free morning', note: '', type: 'relax', start: '', end: '' },
-      { id: 'tour-gc', dayId: 'd5', period: 'pm', title: '★ Golden Circle Aurora Surprise', note: 'Half-day · Pickup 12:00', type: 'nature', start: '12:00', end: '' },
-      { id: 'tour-gc2', dayId: 'd5', period: 'pm', title: '★ GC continues', note: 'Geysir · Gullfoss · Kerið', type: 'nature', start: '', end: '' },
-      { id: 'tour-gc3', dayId: 'd5', period: 'pm', title: '★ Dinner', note: 'Drop-off Reykjavík', type: 'food', start: '', end: '' },
-      { id: 'tour-gc4', dayId: 'd5', period: 'pm', title: '★ Northern Lights hunt', note: 'Pickup ~20:30 · return ~00:00', type: 'nature', start: '20:30', end: '00:00' },
-
-      { id: 'm36', dayId: 'd6', period: 'am', title: 'Free morning', note: '', type: 'relax', start: '', end: '' },
-      { id: 'm37', dayId: 'd6', period: 'am', title: 'City walk', note: '', type: 'culture', start: '', end: '' },
-      { id: 'm38', dayId: 'd6', period: 'pm', title: 'Lunch', note: '', type: 'food', start: '', end: '' },
-      { id: 'm40', dayId: 'd6', period: 'pm', title: 'Cafe / Bookstore', note: '', type: 'relax', start: '', end: '' },
-      { id: 'm42', dayId: 'd6', period: 'pm', title: 'Dinner', note: '', type: 'food', start: '', end: '' },
-
-      { id: 'm43', dayId: 'd7', period: 'am', title: 'Breakfast + pack', note: 'Leave ~09:05', type: 'food', start: '', end: '09:05' },
-      { id: 'm44', dayId: 'd7', period: 'am', title: 'Transfer to KEF', note: '2h before flight', type: 'drive', start: '09:05', end: '09:55' },
-      { id: 'm45', dayId: 'd7', period: 'am', title: 'Departure 11:55', note: '', type: 'drive', start: '11:55', end: '' },
-
-      { id: 'm3', dayId: 'pool', period: 'pool', title: 'Hallgrímskirkja', note: '哈德格里米爾教堂', type: 'culture', start: '', end: '' },
-      { id: 'pool-12tonar', dayId: 'pool', period: 'pool', title: '12 Tónar', note: 'Record shop · Skólavörðustígur', type: 'culture', start: '', end: '' },
-      { id: 'pool-bioparadis', dayId: 'pool', period: 'pool', title: 'Bíó Paradís', note: 'Cinema · Hverfisgata', type: 'culture', start: '', end: '' },
-      { id: 'pool-idazimsen', dayId: 'pool', period: 'pool', title: 'Iða Zimsen', note: 'Cafe / hangout', type: 'relax', start: '', end: '' },
-    ];
+    const STORAGE_KEY = 'trip-kanban-v1';
 
     let memos = [];
     let bindings = [];
@@ -727,7 +670,7 @@
     let draggedId = null;
     let days = [];
     let planTitle = 'Trip Plan';
-    let startDate = null; // 'YYYY-MM-DD' or null
+    let startDate = null;
     let endDate = null;
     let syncingScroll = false;
     let isAddingNew = false;
@@ -765,7 +708,6 @@
     }
 
     function dateForDayIndex(index) {
-      // index 0-based
       if (!startDate) return '';
       const d = parseISODate(startDate);
       if (!d) return '';
@@ -783,7 +725,6 @@
       days.forEach((d, i) => {
         d.num = i + 1;
         let label = d.label || stripDateFromTitle(d.title) || '';
-        // Default "Day N" labels track the current position after move/delete
         if (!label || /^Day\s+\d+$/i.test(label.trim())) {
           label = 'Day ' + d.num;
         }
@@ -835,8 +776,6 @@
       startDate = val;
       if (startDate) {
         recomputeEndFromStart();
-      } else if (!endDate) {
-        // both cleared
       }
       syncDayTitles();
       saveState();
@@ -861,7 +800,6 @@
       return days[0] ? days[0].id : null;
     }
 
-    /* —— Bindings —— */
     function isBoundPair(idA, idB) {
       return bindings.some(p => p.a === idA && p.b === idB);
     }
@@ -960,14 +898,37 @@
       };
     }
 
-    function buildDefaultState() {
-      days = JSON.parse(JSON.stringify(DEFAULT_DAYS));
-      memos = JSON.parse(JSON.stringify(DEFAULT_MEMOS));
-      bindings = JSON.parse(JSON.stringify(DEFAULT_BINDINGS));
-      planTitle = '🇮🇸 Iceland 7-Day Plan';
-      startDate = '2026-11-21';
-      endDate = '2026-11-27';
-      ensureAllBindings();
+    function seedDayMemos(dayId) {
+      memos.push({
+        id: uid(),
+        dayId: dayId,
+        period: 'am',
+        title: 'AM activity',
+        note: '',
+        type: 'nature',
+        start: '',
+        end: ''
+      });
+      memos.push({
+        id: uid(),
+        dayId: dayId,
+        period: 'pm',
+        title: 'PM activity',
+        note: '',
+        type: 'culture',
+        start: '',
+        end: ''
+      });
+    }
+
+    function buildEmptyState() {
+      days = [createDefaultDay(1)];
+      memos = [];
+      bindings = [];
+      planTitle = 'Trip Plan';
+      startDate = null;
+      endDate = null;
+      seedDayMemos(days[0].id);
       syncDayTitles();
     }
 
@@ -992,7 +953,7 @@
           return;
         }
       } catch (e) {}
-      buildDefaultState();
+      buildEmptyState();
     }
 
     function saveState() {
@@ -1020,6 +981,7 @@
       }
       const d = createDefaultDay(days.length + 1);
       days.push(d);
+      seedDayMemos(d.id);
       if (startDate) recomputeEndFromStart();
       else if (endDate) recomputeStartFromEnd();
       syncDayTitles();
@@ -1060,6 +1022,61 @@
       return 'until ' + end;
     }
 
+    function memosInSlot(dayId, period) {
+      return memos.filter(m => m.dayId === dayId && m.period === period);
+    }
+
+    function reorderMemoInSlot(id, dayId, period, targetIndex) {
+      const memo = memos.find(m => m.id === id);
+      if (!memo) return;
+      memo.dayId = dayId;
+      memo.period = period;
+
+      const without = memos.filter(m => m.id !== id);
+      const before = [];
+      const slot = [];
+      const after = [];
+      let phase = 'before';
+      for (const m of without) {
+        const inSlot = m.dayId === dayId && m.period === period;
+        if (phase === 'before') {
+          if (inSlot) {
+            phase = 'slot';
+            slot.push(m);
+          } else {
+            before.push(m);
+          }
+        } else if (phase === 'slot') {
+          if (inSlot) slot.push(m);
+          else {
+            phase = 'after';
+            after.push(m);
+          }
+        } else {
+          after.push(m);
+        }
+      }
+      const idx = Math.max(0, Math.min(targetIndex, slot.length));
+      slot.splice(idx, 0, memo);
+      memos = before.concat(slot, after);
+    }
+
+    function moveMemoInSlot(id, direction) {
+      const memo = memos.find(m => m.id === id);
+      if (!memo) return;
+      const slot = memosInSlot(memo.dayId, memo.period);
+      const idx = slot.findIndex(m => m.id === id);
+      const newIdx = idx + direction;
+      if (newIdx < 0 || newIdx >= slot.length) {
+        showToast(direction < 0 ? 'Already at top' : 'Already at bottom');
+        return;
+      }
+      reorderMemoInSlot(id, memo.dayId, memo.period, newIdx);
+      saveState();
+      renderBoard();
+      showToast(direction < 0 ? 'Moved up' : 'Moved down');
+    }
+
     function createMemoEl(m) {
       const el = document.createElement('div');
       el.className = 'memo ' + m.type;
@@ -1068,6 +1085,8 @@
       const timeStr = formatTimeRange(m.start, m.end);
       el.innerHTML = `
         <div class="memo-actions">
+          <button class="memo-btn" title="Move up" onclick="event.stopPropagation(); moveMemoInSlot('${m.id}', -1)">↑</button>
+          <button class="memo-btn" title="Move down" onclick="event.stopPropagation(); moveMemoInSlot('${m.id}', 1)">↓</button>
           <button class="memo-btn" title="Edit" onclick="event.stopPropagation(); openEditModal('${m.id}')">✎</button>
           <button class="memo-btn" title="Delete" onclick="event.stopPropagation(); deleteMemo('${m.id}')">×</button>
         </div>
@@ -1279,18 +1298,42 @@
       const id = e.dataTransfer.getData('text/plain') || draggedId;
       if (!id) return;
       const dayId = slot.dataset.dayId;
-      const period = slot.dataset.period;
+      let period = slot.dataset.period;
       const memo = memos.find(m => m.id === id);
       if (!memo) return;
 
-      memo.dayId = dayId;
       if (dayId === 'pool') {
-        memo.period = 'pool';
+        period = 'pool';
         memo.start = '';
         memo.end = '';
       } else {
-        memo.period = period === 'pm' ? 'pm' : 'am';
+        period = period === 'pm' ? 'pm' : 'am';
       }
+
+      const cardsEl = slot.querySelector('.slot-cards');
+      let targetIndex = memosInSlot(dayId, period).filter(m => m.id !== id).length;
+      if (cardsEl) {
+        const cards = Array.from(cardsEl.querySelectorAll('.memo'));
+        const y = e.clientY;
+        let insertBeforeId = null;
+        for (let i = 0; i < cards.length; i++) {
+          if (cards[i].dataset.id === id) continue;
+          const rect = cards[i].getBoundingClientRect();
+          if (y < rect.top + rect.height / 2) {
+            insertBeforeId = cards[i].dataset.id;
+            break;
+          }
+        }
+        if (insertBeforeId) {
+          const siblings = memosInSlot(dayId, period).filter(m => m.id !== id);
+          const at = siblings.findIndex(m => m.id === insertBeforeId);
+          targetIndex = at >= 0 ? at : 0;
+        } else {
+          targetIndex = memosInSlot(dayId, period).filter(m => m.id !== id).length;
+        }
+      }
+
+      reorderMemoInSlot(id, dayId, period, targetIndex);
       saveState();
       renderBoard();
       showToast('Moved: ' + memo.title);
@@ -1333,8 +1376,10 @@
       document.getElementById('f-end').value = m.end || '';
       document.getElementById('f-type').value = m.type;
       document.getElementById('f-period').value = (m.period === 'pm') ? 'pm' : 'am';
-      document.getElementById('f-day-wrap').style.display = 'none';
-      document.getElementById('f-period-wrap').style.display = m.dayId === 'pool' ? 'none' : 'block';
+      fillDaySelect(m.dayId);
+      document.getElementById('f-day-wrap').style.display = 'block';
+      document.getElementById('f-day').onchange = syncPeriodVisibility;
+      syncPeriodVisibility();
       document.getElementById('modal').classList.add('show');
       document.getElementById('f-title').focus();
     }
@@ -1422,7 +1467,16 @@
           m.type = type;
           m.start = start;
           m.end = end;
-          if (m.dayId !== 'pool') m.period = period;
+          const sel = document.getElementById('f-day');
+          const dayId = sel && sel.value ? sel.value : m.dayId;
+          m.dayId = dayId;
+          if (dayId === 'pool') {
+            m.period = 'pool';
+            m.start = '';
+            m.end = '';
+          } else {
+            m.period = period;
+          }
         }
       } else {
         let dayId = addTarget.dayId || firstDayId();
@@ -1462,13 +1516,13 @@
     }
 
     function resetBoard() {
-      if (!confirm('Reset to the default Iceland 7-day plan? Your changes will be lost.')) return;
-      buildDefaultState();
-      document.getElementById('date-start').value = startDate || '';
-      document.getElementById('date-end').value = endDate || '';
+      if (!confirm('Reset to an empty 1-day plan? Your changes will be lost.')) return;
+      buildEmptyState();
+      document.getElementById('date-start').value = '';
+      document.getElementById('date-end').value = '';
       saveState();
       renderBoard();
-      showToast('Reset to default Iceland plan');
+      showToast('Reset to empty plan');
     }
 
     function buildSummaryText() {
@@ -1596,7 +1650,6 @@
           continue;
         }
 
-        // First non-empty non-separator line that isn't Day/Pool/Bound/Dates can be title
         if (!importedTitle && !/^Day\s+\d+/i.test(line) && !/^Bound:/i.test(line) && !/^📋?\s*Pool/i.test(line) && !/^Dates:/i.test(line)) {
           importedTitle = line.trim();
           continue;
@@ -1683,7 +1736,6 @@
         used.add(d.id);
       });
 
-      // Apply start date for titles if available
       if (importedStart) {
         startDate = importedStart;
         endDate = importedEnd;
@@ -1794,7 +1846,6 @@
       if (e.target.id === 'import-modal') closeImportModal();
     });
 
-    // Title editing
     document.getElementById('plan-title').addEventListener('blur', () => {
       const t = document.getElementById('plan-title');
       planTitle = t.textContent.trim() || 'Trip Plan';
