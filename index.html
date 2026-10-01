@@ -1,3 +1,5 @@
+Test
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -626,92 +628,18 @@
     const STORAGE_KEY = 'trip-kanban-v1';
     const RULE = '─'.repeat(28);
 
-    const DEFAULT_SUMMARY = `Iceland 8-Day Plan
-Dates: 2026-11-21 → 2026-11-28
-Bound: Day 2+Day 3
+    const DEFAULT_SUMMARY = `Trip Plan
+Dates: '' → ''
 ${RULE}
 
-Day 1 · 21 Nov · Arrival
-  (Reykjavík)
+Day 1
   AM
-  • Land KEF 10:50 [10:50 – 12:25] — Clearance ~40 min + Flybus ~50 min (drive)
+  • AM activity (culture)
   PM
-  • Check-in + lunch [from 13:00] (relax)
-  • Nordic House (culture)
-  • Kaffihús Vesturbæjar — Cafe - Melhagi 20, 107 Reykjavík (food)
-  • How to become Icelandic in 60 min [19:00 – 20:00] — Harpa · Kaldalón (culture)
-  • Dinner (food)
-
-Day 2 · 22 Nov · South Coast D1
-  (Skaftafell area)
-  AM
-  • ★ 2-Day South Coast + Ice Cave [from 09:00] — 2-day · Pickup 09:00 · South coast day (nature)
-  • ★ Waterfalls — Seljalandsfoss · Skógafoss (nature)
-  PM
-  • ★ Black Sand Beach — Reynisfjara (nature)
-  • ★ Hotel Skaftafell area — Overnight + optional NL (relax)
-
-Day 3 · 23 Nov · South Coast D2
-  (Return Reykjavík)
-  AM
-  • ★ 2-Day tour continues — Ice cave + lagoon day (nature)
-  • ★ Glacier Lagoon — Jökulsárlón (nature)
-  • ★ Diamond Beach (nature)
-  PM
-  • ★ Ice Cave (nature)
-  • ★ Return Reykjavík [until 21:00] — Drop-off ~21:00 (drive)
-
-Day 4 · 24 Nov · City
-  (Reykjavík)
-  AM
-  • Free morning (relax)
-  • Reykjavik Roasters — Cafe - Kárastígur 1, 101 Reykjavík (food)
-  • The Icelandic Phallological Museum (culture)
-  PM
-  • Lunch (food)
-  • Iða Zimsen — Bookstore / hangout (relax)
-  • Dinner (food)
-  • 12 Tónar — Record shop · Skólavörðustígur (culture)
-
-Day 5 · 25 Nov · Golden Coast
-  (Reykjavík + Golden Coast)
-  AM
-  • Breakfast · Mokka Kaffi — Cafe - Skólavörðustígur 3A, 101 Reykjavík (food)
-  PM
-  • ★ Golden Circle Aurora Surprise [from 12:00] — Half-day · Pickup 12:00 (nature)
-  • ★ GC continues — Geysir · Gullfoss · Kerið (nature)
-  • ★ Dinner — Drop-off Reykjavík (food)
-  • ★ Northern Lights hunt [20:30 – 00:00] — Pickup ~20:30 · return ~00:00 (nature)
-
-Day 6 · 26 Nov · City
-  (Reykjavík)
-  AM
-  • Recovery morning (relax)
-  PM
-  • Lunch (food)
-  • Bíó Paradís — Cinema · Hverfisgata (culture)
-  • Dinner (food)
-
-Day 7 · 27 Nov · City
-  (Reykjavík)
-  AM
-  • Free morning (relax)
-  • National Museum of Iceland (culture)
-  PM
-  • Lunch (food)
-  • Cafe / Bookstore (relax)
-  • Dinner (food)
-
-Day 8 · 28 Nov · Departure 11:55
-  (Airport by 09:55)
-  AM
-  • Breakfast + pack [until 09:05] — Leave ~09:05 (relax)
-  • Transfer to KEF [09:05 – 09:55] — 2h before flight (drive)
-  • Departure 11:55 [from 11:55] (drive)
+  • AM activity (food)
 
 📋 Pool
-  • Kaffivagninn — Lunch/Dinner - Grandagarður 10, 101 Reykjavík (food)
-  • Snaps Bistro — Lunch/Dinner - Þórsgata 1, 101 Reykjavík (food)
+  • Snowboard (nature)
 
 ${RULE}`;
 
@@ -1094,12 +1022,15 @@ ${RULE}`;
       el.dataset.id = m.id;
       const timeStr = formatTimeRange(m.start, m.end);
       el.innerHTML =
-        '<div class="memo-actions">' +
-          '<button class="memo-btn" title="Move up" onclick="event.stopPropagation();moveMemoInSlot(\'' + m.id + '\',-1)">↑</button>' +
-          '<button class="memo-btn" title="Move down" onclick="event.stopPropagation();moveMemoInSlot(\'' + m.id + '\',1)">↓</button>' +
-          '<button class="memo-btn" title="Edit" onclick="event.stopPropagation();openMemoModal(\'' + m.id + '\')">✎</button>' +
-          '<button class="memo-btn" title="Delete" onclick="event.stopPropagation();deleteMemo(\'' + m.id + '\')">×</button>' +
-        '</div>' +
+
+// Inside createMemoEl, replace the memo-actions div with:
+'<div class="memo-actions">' +
+  '<button class="memo-btn" title="Move up" onclick="event.stopPropagation();moveMemoInSlot(\'' + m.id + '\',-1)">↑</button>' +
+  '<button class="memo-btn" title="Move down" onclick="event.stopPropagation();moveMemoInSlot(\'' + m.id + '\',1)">↓</button>' +
+  '<button class="memo-btn" title="Search images" onclick="event.stopPropagation();searchImages(\'' + m.id + '\')">🖼</button>' +
+  '<button class="memo-btn" title="Edit" onclick="event.stopPropagation();openMemoModal(\'' + m.id + '\')">✎</button>' +
+  '<button class="memo-btn" title="Delete" onclick="event.stopPropagation();deleteMemo(\'' + m.id + '\')">×</button>' +
+'</div>' +
         (timeStr ? '<div class="memo-time">' + timeStr + '</div>' : '') +
         '<div class="memo-title">' + escapeHtml(m.title) + '</div>' +
         (m.note ? '<div class="memo-note">' + escapeHtml(m.note) + '</div>' : '') +
@@ -1369,10 +1300,10 @@ ${RULE}`;
     }
 
     function resetBoard() {
-      if (!confirm('Reset to the default Iceland 8-day plan? Your changes will be lost.')) return;
+      if (!confirm('Reset to the default plan? Your changes will be lost.')) return;
       buildEmptyState();
       persistAndRender();
-      showToast('Reset to default Iceland plan');
+      showToast('Reset to default plan');
     }
 
     function formatMemoLine(m) {
@@ -1679,6 +1610,13 @@ ${RULE}`;
       });
       window.addEventListener('resize', updateHScrollSpacer);
     }
+
+function searchImages(id) {
+  const m = memos.find(x => x.id === id);
+  if (!m || !m.title) return;
+  const query = encodeURIComponent(m.title);
+  window.open('https://www.google.com/search?tbm=isch&q=' + query, '_blank');
+}
 
     async function exportImage() {
       showToast('Rendering image…');
